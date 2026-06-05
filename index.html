@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Онлайн-каталог — Филиал «Стародорожский центр ремесел»</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Текстовый редактор Quill (для админки) -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+    <!-- SortableJS (для Drag & Drop) -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        belarus: {
+                            red: '#bd081c',      
+                            redlight: '#ffebeb', 
+                            dark: '#1a1a1a',     
+                            clay: '#a0522d',     
+                            straw: '#d4af37',    
+                            linen: '#f7f5f0',    
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f7f5f0; border-left: 1px solid #e5e5e0; }
+        ::-webkit-scrollbar-thumb { background: #bd081c; border-radius: 10px; border: 2px solid #f7f5f0; }
+        ::-webkit-scrollbar-thumb:hover { background: #9e0615; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .ornament-bg { background-image: radial-gradient(#bd081c 0.5px, transparent 0.5px), radial-gradient(#bd081c 0.5px, #f7f5f0 0.5px); background-size: 20px 20px; background-position: 0 0, 10px 10px; opacity: 0.04; }
+        @keyframes skeleton-loading { 0%, 100% { background-color: #f3f3ee; } 50% { background-color: #e6e6de; } }
+        .skeleton-pulse { animation: skeleton-loading 1.5s ease-in-out infinite; }
+        @keyframes highlight-glow { 0%, 100% { border-color: rgba(63, 63, 70, 0.5); box-shadow: none; } 50% { border-color: #bd081c; box-shadow: 0 0 20px 5px rgba(189, 8, 28, 0.25); } }
+        .form-highlight-active { animation: highlight-glow 2s ease-in-out 2; }
+        .ql-container { font-family: 'Inter', sans-serif !important; border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem; background: white;}
+        .ql-toolbar { border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem; background: #fdfdfd;}
+        .sortable-ghost { opacity: 0.4; background-color: #ffebeb; }
+        .sortable-drag { cursor: grabbing !important; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        @keyframes heartBurst { 0% { transform: scale(1); } 40% { transform: scale(1.4); } 70% { transform: scale(0.9); } 100% { transform: scale(1); } }
+        .heart-animate i { animation: heartBurst 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+    </style>
+</head>
+<body class="bg-belarus-linen text-zinc-800 font-sans min-h-screen flex flex-col antialiased scroll-smooth">
+
+<svg xmlns="http://www.w3.org/2000/svg" class="hidden">
+    <defs>
+        <g id="center-logo" transform="translate(0.000000,870.000000) scale(0.100000,-0.100000)" fill="currentColor" stroke="none">
+            <path d="M4037 8588 c-68 -62 -181 -164 -251 -227 -69 -62 -125 -116 -122 -118 6 -6 333 -32 434 -34 44 -1 85 2 91 6 9 5 10 45 6 143 -11 262 -17 342 -26 342 -5 0 -64 -51 -132 -112z"/>
+            <path d="M4527 8693 c-3 -4 -6 -116 -8 -248 l-4 -240 75 2 c85 2 453 34 459 39 5 4 -57 59 -199 179 -58 49 -130 112 -160 140 -98 88 -158 136 -163 128z"/>
+            <path d="M4212 8053 l3 -128 135 0 135 0 3 128 3 127 -141 0 -141 0 3 -127z"/>
+            <path d="M2665 7911 c-4 -7 -2 -263 4 -569 6 -307 13 -667 15 -802 l5 -246 423 -429 c232 -237 474 -483 537 -547 63 -65 120 -118 126 -118 5 0 109 99 229 219 l219 219 5 331 5 330 -254 263 c-139 145 -301 313 -359 373 -58 61 -274 286 -481 500 -206 215 -395 412 -420 439 -32 34 -48 45 -54 37z"/>
+            <path d="M4517 7913 c-3 -4 -4 -40 -2 -78 1 -39 3 -148 4 -242 0 -95 4 -173 9 -173 8 0 137 109 273 229 47 42 122 107 167 145 44 39 79 73 77 77 -4 6 -165 21 -380 35 -44 3 -94 7 -111 10 -18 3 -34 2 -37 -3z"/>
+            <path d="M3910 7899 c-96 -5 -193 -12 -214 -17 l-40 -7 105 -94 c57 -52 169 -153 248 -225 79 -72 149 -132 156 -134 15 -3 23 102 27 343 l3 140 -55 1 c-30 1 -134 -2 -230 -7z"/>
+            <path d="M6013 7816 c-37 -41 -180 -191 -318 -333 -319 -330 -910 -943 -1041 -1082 l-101 -106 -7 -325 -6 -325 229 -234 230 -234 383 389 c210 214 458 466 550 559 l168 171 0 791 c0 463 -4 794 -9 797 -5 4 -40 -27 -78 -68z"/>
+            <path d="M4287 7364 c-9 -9 -9 -399 0 -781 l6 -293 104 0 103 0 -1 408 c-1 224 -4 466 -8 537 l-6 130 -95 3 c-53 1 -99 0 -103 -4z"/>
+            <path d="M860 6073 c0 -4 347 -352 772 -773 722 -717 774 -765 812 -771 23 -4 185 -9 361 -13 l320 -7 40 49 c22 27 85 102 140 167 167 198 225 270 222 277 -2 7 -447 470 -804 836 l-178 184 -280 9 c-154 4 -435 15 -625 23 -506 22 -780 28 -780 19z"/>
+            <path d="M6159 5928 c-80 -84 -219 -231 -310 -326 -351 -371 -589 -627 -589 -635 0 -5 42 -54 93 -110 50 -57 141 -158 202 -225 l109 -122 101 1 c55 0 219 4 364 8 l264 8 56 59 c30 32 199 208 376 389 264 272 666 688 944 977 30 32 52 60 49 64 -4 3 -116 10 -250 15 -134 4 -382 15 -553 23 -170 8 -400 18 -511 21 l-201 6 -144 -153z"/>
+            <path d="M4150 5205 l-235 -234 189 -193 c273 -279 303 -308 313 -308 5 0 116 111 248 246 l239 247 -96 91 c-54 50 -167 157 -251 239 -85 81 -158 147 -163 146 -5 0 -115 -105 -244 -234z"/>
+            <path d="M7740 4833 c-118 -107 -227 -205 -242 -218 -16 -13 -28 -28 -28 -33 0 -6 42 -13 93 -16 50 -3 165 -10 254 -16 90 -6 168 -8 174 -4 8 5 9 66 5 218 -8 230 -12 266 -29 265 -7 0 -109 -88 -227 -196z"/>
+            <path d="M8327 5008 c-3 -13 -6 -124 -7 -247 l-1 -224 88 6 c426 29 443 31 442 45 0 4 -68 66 -151 137 -83 72 -196 169 -252 218 -55 48 -103 87 -107 87 -4 0 -9 -10 -12 -22z"/>
+            <path d="M388 4899 c-62 -58 -176 -160 -252 -229 -138 -123 -139 -125 -110 -132 44 -11 484 -39 496 -32 12 8 1 474 -12 488 -5 4 -59 -38 -122 -95z"/>
+            <path d="M857 4916 c-3 -40 -6 -151 -7 -245 l-1 -171 43 0 c24 0 135 9 248 20 113 11 213 20 223 20 9 0 17 4 17 9 0 5 -42 44 -92 87 -87 73 -162 138 -336 292 -39 34 -75 62 -80 62 -5 0 -12 -33 -15 -74z"/>
+            <path d="M3570 4629 l-245 -239 260 -255 c143 -140 263 -253 267 -252 4 1 111 109 239 241 l232 238 -155 157 c-85 86 -193 196 -239 244 -46 49 -91 93 -99 97 -11 6 -78 -54 -260 -231z"/>
+            <path d="M4760 4619 c-129 -133 -236 -247 -238 -253 -3 -14 463 -480 476 -475 5 2 120 116 253 253 l244 249 -72 66 C4927 4707 4818 4811 4723 4902 C4629 4993 4549 5068 4545 5070 C4541 5071 4432 4968 4303 4835 Z"/>
+            <path d="M8014 4507 c-2 -7 -3 -65 -2 -128 l3 -114 138 -3 137 -3 0 131 0 130 -135 0 c-103 0 -137 -3 -141 -13z"/>
+            <path d="M552 4353 l3 -128 135 0 135 0 3 128 3 127 -141 0 -141 0 3 -127z"/>
+            <path d="M6474 4467 c-3 -8 -4 -54 -2 -103 l3 -89 500 0 500 0 0 100 0 100 -498 3 c-408 2 -498 0 -503 -11z"/>
+            <path d="M1347 4443 c-9 -8 -9 -62 -1 -142 l7 -61 516 2 516 3 -1 30 c-1 17 -2 63 -3 103 l-1 72 -513 0 c-283 0 -517 -3 -520 -7z"/>
+            <path d="M4260 4103 c-85 -87 -191 -195 -235 -241 l-80 -82 240 -240 c132 -132 243 -239 247 -238 14 5 458 472 458 481 0 11 -460 477 -470 477 -3 0 -75 -71 -160 -157z"/>
+            <path d="M8323 4244 c-7 -20 1 -471 9 -480 8 -7 33 14 317 261 95 83 180 155 188 162 26 21 4 33 -61 33 -34 0 -134 7 -222 15 -87 8 -174 16 -193 18 -20 2 -35 -2 -38 -9z"/>
+            <path d="M7685 4230 c-121 -9 -221 -18 -222 -19 -6 -3 497 -451 507 -451 16 0 19 35 22 265 l3 220 -45 1 c-25 1 -144 -6 -265 -16z"/>
+            <path d="M857 4214 c-16 -16 -4 -494 13 -494 8 0 504 430 508 440 6 16 -16 19 -238 34 -124 9 -236 19 -250 21 -14 3 -29 3 -33 -1z"/>
+            <path d="M2444 4211 l-52 -6 -363 -370 c-200 -203 -531 -539 -736 -747 -205 -207 -373 -381 -373 -387 0 -14 -8 -14 861 7 l706 18 516 509 516 510 -47 50 c-27 28 -128 134 -226 238 l-178 187 -287 -2 c-157 -1 -309 -4 -337 -7z"/>
+            <path d="M419 4206 c-2 -2 -78 -7 -169 -10 -186 -8 -252 -15 -248 -27 7 -19 484 -443 504 -447 11 -3 14 12 14 70 0 40 3 151 7 246 l6 172 -55 0 c-30 0 -57 -2 -59 -4z"/>
+            <path d="M5610 4134 c-47 -42 -137 -125 -200 -184 -63 -59 -128 -119 -145 -133 l-30 -26 110 -113 c61 -62 203 -207 316 -323 113 -115 292 -300 398 -410 l193 -200 71 -6 c40 -4 182 -7 317 -8 135 0 460 -6 723 -12 262 -7 480 -9 484 -6 3 4 -319 335 -716 736 l-722 730 -62 5 c-34 3 -136 8 -227 11 -91 3 -223 8 -295 11 l-130 5 -85 -77z"/>
+            <path d="M4795 3320 l-209 -210 -7 -252 c-4 -139 -8 -302 -8 -363 l-1 -110 253 -255 c139 -140 476 -482 750 -759 274 -277 500 -501 503 -498 6 6 -13 1390 -22 1532 l-6 100 -511 513 c-282 281 -516 512 -522 512 -6 0 -105 -94 -220 -210z"/>
+            <path d="M3619 3378 c-400 -365 -588 -536 -628 -574 -24 -23 -103 -95 -177 -160 l-133 -119 0 -130 c0 -71 6 -265 14 -430 8 -165 19 -448 25 -630 10 -346 16 -418 30 -413 5 2 340 338 745 748 l735 744 -1 246 c-1 135 -4 281 -7 326 l-7 81 -216 221 c-118 122 -220 222 -225 222 -5 0 -75 -60 -155 -132z"/>
+            <path d="M4277 2384 c-12 -13 -8 -1082 4 -1090 9 -5 145 -9 197 -5 10 1 12 114 10 549 l-3 547 -101 3 c-55 1 -103 0 -107 -4z"/>
+            <path d="M4064 1163 c-72 -65 -185 -167 -253 -228 -119 -107 -121 -110 -94 -117 40 -10 483 -38 500 -31 12 5 13 33 8 177 -4 94 -8 194 -10 221 -2 28 -4 60 -4 73 -1 12 -4 22 -9 22 -4 0 -66 -53 -138 -117z"/>
+            <path d="M4548 1053 c-2 -242 -1 -263 7 -271 6 -6 517 37 525 44 2 3 -8 15 -22 27 -75 63 -280 239 -337 291 -98 87 -147 126 -160 126 -8 0 -12 -62 -13 -217z"/>
+            <path d="M4242 633 l3 -128 135 0 135 0 3 128 3 127 -141 0 -141 0 3 -127z"/>
+            <path d="M4549 483 c0 -10 0 -119 1 -243 1 -209 8 -264 28 -235 4 6 57 53 117 105 61 51 133 114 160 139 28 25 90 79 138 120 48 40 85 77 82 81 -3 5 -53 11 -112 15 -135 8 -326 24 -375 31 -32 5 -38 3 -39 -13z"/>
+            <path d="M4040 480 c-47 -5 -132 -9 -190 -10 -188 -4 -186 4 -25 -140 77 -69 190 -171 251 -228 62 -56 117 -102 122 -102 5 0 12 14 14 32 5 32 12 243 13 378 l0 75 -50 1 c-27 1 -88 -2 -135 -6z"/>
+        </g>
+    </defs>
+</svg>
+
+<div class="h-2 bg-repeat-x w-full" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%228%22 viewBox=%220 0 16 8%22><path d=%22M0 4 L4 0 L8 4 L12 0 L16 4 L12 8 L8 4 L4 8 Z%22 fill=%22%23bd081c%22/></svg>');"></div>
+
+<header class="bg-white shadow-sm sticky top-0 z-40 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+            <div onclick="window.triggerSecretEntrance()" class="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer select-none">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 shrink-0 flex items-center justify-center hover:scale-105 transition-transform duration-300" title="Официальный логотип Стародорожского центра ремесел">
+                    <svg class="w-full h-full text-belarus-red" viewBox="0 0 885 870" fill="none">
+                        <use href="#center-logo"></use>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-serif font-bold text-xs sm:text-base text-belarus-dark leading-tight tracking-wide">
+                        Филиал «Стародорожский центр ремесел»
+                    </h1>
+                    <p class="text-[8px] sm:text-[9px] text-belarus-red font-semibold uppercase tracking-wider">Официальный каталог сувениров</p>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="#about" class="text-zinc-600 hover:text-belarus-red transition-colors">О Центре</a>
+                <a href="#catalog" class="text-belarus-red font-bold">Каталог изделий</a>
+                <a href="#masterclasses" class="text-zinc-600 hover:text-belarus-red transition-colors">Мастер-классы</a>
+                <a href="#contacts" class="text-zinc-600 hover:text-belarus-red transition-colors">Контакты</a>
+            </nav>
+
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <button onclick="window.toggleFavoritesModal()" class="relative p-2.5 text-zinc-600 hover:text-belarus-red transition-colors focus:outline-none" aria-label="Избранное (Закладки)">
+                    <i class="fa-regular fa-heart text-xl sm:text-2xl"></i>
+                    <span id="fav-badge" class="hidden absolute -top-1 -right-1 bg-belarus-red text-white text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center aspect-square border-2 border-white shadow-sm leading-none">0</span>
+                </button>
+                <!-- НОВОЕ: Иконка КОРЗИНЫ -->
+                <button onclick="window.toggleCartModal()" class="relative p-2.5 text-zinc-600 hover:text-belarus-red transition-colors focus:outline-none" aria-label="Корзина запросов">
+                    <i class="fa-solid fa-basket-shopping text-xl sm:text-2xl"></i>
+                    <span id="cart-badge" class="hidden absolute -top-1 -right-1 bg-amber-500 text-zinc-900 text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center aspect-square border-2 shadow-sm leading-none border-white">0</span>
+                </button>
+                <button onclick="window.toggleMobileMenu()" class="md:hidden p-2.5 text-zinc-600 hover:text-belarus-red transition-colors focus:outline-none" aria-label="Меню">
+                    <i class="fa-solid fa-bars text-xl sm:text-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div id="mobile-menu" class="hidden md:hidden bg-white border-b border-zinc-200 py-4 px-6 space-y-3 transition-all duration-300 shadow-md">
+    <a href="#about" onclick="window.toggleMobileMenu()" class="block text-zinc-700 hover:text-belarus-red font-medium py-1">О Центре</a>
+    <a href="#catalog" onclick="window.toggleMobileMenu()" class="block text-belarus-red font-bold py-1">Каталог изделий</a>
+    <a href="#masterclasses" onclick="window.toggleMobileMenu()" class="block text-zinc-700 hover:text-belarus-red font-medium py-1">Мастер-классы</a>
+    <a href="#contacts" onclick="window.toggleMobileMenu()" class="block text-zinc-700 hover:text-belarus-red font-medium py-1">Контакты</a>
+</div>
+
+<section class="relative bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white py-10 sm:py-16 lg:py-20 overflow-hidden">
+    <div class="absolute inset-0 opacity-10 ornament-bg pointer-events-none"></div>
+    <div class="absolute -right-20 -bottom-20 w-96 h-96 rounded-full bg-belarus-red opacity-10 filter blur-3xl"></div>
+    <div class="absolute -left-20 -top-20 w-96 h-96 rounded-full bg-amber-500 opacity-10 filter blur-3xl"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            
+            <div class="text-left space-y-4 sm:space-y-6">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-amber-400 text-[11px] sm:text-xs font-semibold tracking-wide border border-white/15">
+                    <i class="fa-solid fa-star text-[10px]"></i> 100% Аутентичное наследие Стародорожчины
+                </span>
+                <h2 class="font-serif text-2xl sm:text-4xl lg:text-5xl font-bold leading-tight">
+                    Богатство традиций <br>в <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">каждой детали</span>
+                </h2>
+                
+                <div class="text-zinc-300 text-xs sm:text-sm max-w-xl leading-relaxed space-y-3 sm:space-y-4">
+                    <p style="text-indent: 24px;" class="text-left sm:text-justify">
+                        Стародорожский центр ремёсел — это пространство, где ткань превращается в исповедь, а вышивка — в летопись. Древние орнаменты не повторяются — они продолжаются. И у каждого изделия есть не только форма, но и своя судьба, сотканая из памяти, тепла и бесконечной любви к этой земле.
+                    </p>
+                    <p style="text-indent: 24px;" class="text-left sm:text-justify">
+                        Мы не просто храним наследие Стародорожчины — мы даём ему слово. Через живые встречи, мастер-классы, где время течёт иначе, через выставки, на которых вещи смотрят на вас в ответ.
+                    </p>
+                    <p style="text-indent: 24px;" class="text-left sm:text-justify">
+                        Приходите увидеть красоту, рождённую в тишине мастерской. Почувствовать, как прошлое мягко касается настоящего. И убедиться: подлинное вдохновение живёт там, где умеют слушать нить.
+                    </p>
+                </div>
+                
+                <div class="flex flex-wrap gap-3 pt-2">
+                    <a href="#catalog-section" class="w-full sm:w-auto px-5 py-3 bg-belarus-red text-white font-semibold rounded-lg shadow-lg shadow-belarus-red/30 hover:bg-red-700 transform hover:-translate-y-0.5 transition duration-300 flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-solid fa-compass"></i> Открыть каталог
+                    </a>
+                    <a href="#about" class="w-full sm:w-auto px-5 py-3 bg-white/10 text-white font-semibold rounded-lg border border-white/20 hover:bg-white/20 transition duration-300 flex items-center justify-center text-sm">
+                        О Центре
+                    </a>
+                </div>
+            </div>
+            
+            <div class="flex justify-center mt-6 lg:mt-0">
+                <div class="w-full max-w-md bg-zinc-800/40 border border-white/10 rounded-2xl shadow-2xl p-4 sm:p-5 flex flex-col relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-b from-belarus-red/10 to-transparent pointer-events-none"></div>
+                    <div class="absolute -right-20 -top-20 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl group-hover:bg-amber-500/20 transition-all duration-500"></div>
+                    
+                    <div class="relative aspect-[4/3] rounded-xl overflow-hidden bg-zinc-950 mb-4 sm:mb-5">
+                        <img src="https://placehold.co/600x450/bd081c/ffffff?text=%D0%A1%D0%BF%D0%B0%D0%B4%D1%87%D1%8B%D0%BD%D0%B0" class="w-full h-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-105" alt="Ткачество">
+                        <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent"></div>
+                        <span class="absolute bottom-3 left-3 bg-zinc-950/85 backdrop-blur-sm text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-md border border-white/10">
+                            <i class="fa-solid fa-hotel text-[8px] mr-1"></i> Наша экспозиция
+                        </span>
+                    </div>
+
+                    <div class="text-left space-y-2.5">
+                        <h3 class="font-serif text-base sm:text-lg font-bold text-white leading-tight">Хата-музей рамёстваў</h3>
+                        <p class="text-zinc-300 text-xs leading-relaxed">
+                            Старадарожскі цэнтр запрашае наведаць залы этнаграфічнай спадчыны і ўбачыць унікальныя Рухаўскія дываны і народнае ткацтва ўжывую.
+                        </p>
+                        <div class="pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-zinc-400">
+                            <span><i class="fa-regular fa-clock text-amber-400 mr-1"></i> Пн—Сб, 9:00—18:00</span>
+                            <a href="#contacts" class="text-amber-400 font-bold hover:underline flex items-center gap-1">
+                                Наведаць <i class="fa-solid fa-arrow-right text-[9px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10" id="catalog-section">
+    
+    <div class="text-center space-y-2 mb-8 sm:mb-10">
+        <h2 class="font-serif text-2xl sm:text-4xl font-bold text-belarus-dark" id="catalog">Каталог сувенирной продукции</h2>
+        <div class="flex items-center justify-center gap-2">
+            <span class="h-[2px] w-12 bg-belarus-red"></span>
+            <i class="fa-solid fa-leaf text-belarus-red animate-pulse"></i>
+            <span class="h-[2px] w-12 bg-belarus-red"></span>
+        </div>
+        <p class="text-zinc-500 max-w-lg mx-auto text-xs sm:text-sm">Каждое изделие уникально и несёт тепло рук мастера. Выберите категорию для удобной фильтрации.</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-md p-4 sm:p-6 mb-8 border border-zinc-100">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-5 items-center">
+            
+            <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-400">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input type="text" id="search-input" oninput="window.applyFilters()" placeholder="Поиск по названию или мастеру..." class="w-full pl-10 pr-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-belarus-red focus:border-belarus-red focus:outline-none transition-all text-sm">
+            </div>
+
+            <div class="flex items-center gap-3 w-full">
+                <span class="text-xs font-semibold text-zinc-500 uppercase tracking-wider whitespace-nowrap">Сортировать:</span>
+                <div class="relative flex-grow" id="custom-sort-dropdown">
+                    <button onclick="window.toggleSortDropdown(event)" id="sort-dropdown-btn" class="w-full flex items-center justify-between px-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-belarus-red focus:border-belarus-red focus:outline-none transition-all text-sm font-medium text-zinc-700">
+                        <span id="sort-dropdown-label">По умолчанию</span>
+                        <i class="fa-solid fa-chevron-down text-zinc-400 text-xs transition-transform duration-200" id="sort-dropdown-arrow"></i>
+                    </button>
+                    <div id="sort-dropdown-options" class="hidden absolute left-0 right-0 mt-1.5 bg-white border border-zinc-200 rounded-xl shadow-xl z-30 overflow-hidden">
+                        <button onclick="window.selectSortOption('default', 'По умолчанию')" class="w-full text-left px-4 py-2.5 text-xs sm:text-sm hover:bg-belarus-redlight hover:text-belarus-red text-zinc-700 font-medium transition-colors border-b border-zinc-100 last:border-none">По умолчанию</button>
+                        <button onclick="window.selectSortOption('price-asc', 'Сначала дешевые')" class="w-full text-left px-4 py-2.5 text-xs sm:text-sm hover:bg-belarus-redlight hover:text-belarus-red text-zinc-700 font-medium transition-colors border-b border-zinc-100 last:border-none">Сначала дешевые</button>
+                        <button onclick="window.selectSortOption('price-desc', 'Сначала дорогие')" class="w-full text-left px-4 py-2.5 text-xs sm:text-sm hover:bg-belarus-redlight hover:text-belarus-red text-zinc-700 font-medium transition-colors last:border-none">Сначала дорогие</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-around bg-zinc-50 p-2.5 rounded-xl border border-zinc-100 text-center">
+                <div>
+                    <span class="block text-lg font-bold text-belarus-red" id="stats-total-count">0</span>
+                    <span class="text-[9px] text-zinc-400 uppercase tracking-wider">Изделий на сайте</span>
+                </div>
+                <div class="border-l border-zinc-200"></div>
+                <div>
+                    <span class="block text-lg font-bold text-amber-600">100%</span>
+                    <span class="text-[9px] text-zinc-400 uppercase tracking-wider">Ручная работа</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative mt-5">
+            <div class="flex overflow-x-auto no-scrollbar md:flex-wrap gap-2 pb-2 md:pb-0 justify-start md:justify-center px-1">
+                <button onclick="window.setCategory('all')" id="btn-cat-all" class="category-btn shrink-0 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 bg-belarus-red text-white shadow-md shadow-belarus-red/20">
+                    Все изделия
+                </button>
+                <button onclick="window.setCategory('ceramics')" id="btn-cat-ceramics" class="category-btn shrink-0 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 bg-zinc-100 text-zinc-600 hover:bg-zinc-200">
+                    🏺 Керамика
+                </button>
+                <button onclick="window.setCategory('embroidery')" id="btn-cat-embroidery" class="category-btn shrink-0 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 bg-zinc-100 text-zinc-600 hover:bg-zinc-200">
+                    🧵 Ткачество & Вышивка
+                </button>
+                <button onclick="window.setCategory('souvenirs')" id="btn-cat-souvenirs" class="category-btn shrink-0 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 bg-zinc-100 text-zinc-600 hover:bg-zinc-200">
+                    🌾 Сувениры
+                </button>
+                <button onclick="window.setCategory('clothing')" id="btn-cat-clothing" class="category-btn shrink-0 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 bg-zinc-100 text-zinc-600 hover:bg-zinc-200">
+                    👗 Одежда
+                </button>
+                <button onclick="window.setCategory('corporate')" id="btn-cat-corporate" class="category-btn shrink-0 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 bg-zinc-100 text-zinc-600 hover:bg-zinc-200">
+                    🏢 Корпоративные сувениры
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Сетка продуктов -->
+    <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 min-h-[300px]">
+        <!-- Скелетоны генерируются через JS -->
+    </div>
+
+    <div id="no-products" class="hidden text-center py-20 space-y-4">
+        <i class="fa-regular fa-folder-open text-6xl text-zinc-300"></i>
+        <h3 class="font-serif text-xl font-bold text-zinc-800">Пока здесь пусто</h3>
+        <p class="text-zinc-500 font-medium text-sm max-w-sm mx-auto">В этой категории или по вашему запросу товары не найдены. Мастера скоро добавят новые изделия!</p>
+        <button onclick="window.resetFilters()" class="px-6 py-3 mt-2 bg-belarus-red text-white text-sm font-bold rounded-lg hover:bg-red-700 transition-colors shadow-md">Показать все сувениры</button>
+    </div>
+
+</main>
+
+<section id="about" class="bg-zinc-100 py-12 sm:py-16 border-t border-b border-zinc-200 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#bd081c 1px, transparent 1px); background-size: 24px 24px;"></div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+            
+            <div class="flex flex-col gap-4 w-full">
+                <button onclick="window.openCraftModal('weaving')" class="w-full text-left bg-white rounded-3xl border border-zinc-100 p-4 sm:p-5 flex items-center gap-4 sm:gap-6 shadow-sm hover:shadow-md transition-all duration-300 focus:outline-none group relative overflow-hidden">
+                    <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center text-4xl shrink-0 transition-transform duration-300 group-hover:scale-105 relative overflow-hidden">
+                        <span class="z-10 select-none filter drop-shadow-sm">🧵</span>
+                        <div class="absolute inset-0 opacity-[0.06] ornament-bg"></div>
+                    </div>
+                    <div class="flex-grow space-y-0.5 min-w-0">
+                        <span class="block text-[10px] sm:text-xs font-bold text-belarus-red uppercase tracking-wider">Бренд «Матчыны кросны»</span>
+                        <h4 class="font-serif font-bold text-zinc-900 text-sm sm:text-base md:text-lg leading-tight transition-colors group-hover:text-belarus-red truncate">Народное ткачество</h4>
+                        <p class="text-zinc-500 text-[11px] sm:text-xs leading-relaxed line-clamp-2">Древнейшее ремесло, узоры и восстановленные техники ткачества Стародорожчины.</p>
+                        <span class="inline-flex items-center text-[11px] sm:text-xs font-bold text-belarus-red mt-1 transition-transform duration-300 group-hover:translate-x-1">
+                            Подробнее &rarr;
+                        </span>
+                    </div>
+                </button>
+
+                <button onclick="window.openCraftModal('rukhov')" class="w-full text-left bg-white rounded-3xl border border-zinc-100 p-4 sm:p-5 flex items-center gap-4 sm:gap-6 shadow-sm hover:shadow-md transition-all duration-300 focus:outline-none group relative overflow-hidden">
+                    <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-4xl shrink-0 transition-transform duration-300 group-hover:scale-105 relative overflow-hidden">
+                        <span class="z-10 select-none filter drop-shadow-sm">🌾</span>
+                        <div class="absolute inset-0 opacity-[0.06] ornament-bg"></div>
+                    </div>
+                    <div class="flex-grow space-y-0.5 min-w-0">
+                        <span class="block text-[10px] sm:text-xs font-bold text-amber-600 uppercase tracking-wider">Уникальная аппликация</span>
+                        <h4 class="font-serif font-bold text-zinc-900 text-sm sm:text-base md:text-lg leading-tight transition-colors group-hover:text-amber-600 truncate">Руховские ковры</h4>
+                        <p class="text-zinc-500 text-[11px] sm:text-xs leading-relaxed line-clamp-2">Редкая техника аппликации золотистой соломкой по ткани и глубокая локальная традиция.</p>
+                        <span class="inline-flex items-center text-[11px] sm:text-xs font-bold text-amber-600 mt-1 transition-transform duration-300 group-hover:translate-x-1">
+                            Подробнее &rarr;
+                        </span>
+                    </div>
+                </button>
+            </div>
+
+            <div class="space-y-5">
+                <span class="text-belarus-red uppercase font-bold text-xs tracking-wider flex items-center gap-2">
+                    <span class="w-2 h-2 bg-belarus-red rounded-full"></span> О нашых цэнтры
+                </span>
+                <h3 class="font-serif text-2xl sm:text-3xl font-bold text-belarus-dark">Хранители традиций Стародорожчины</h3>
+                
+                <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg text-xs text-zinc-700 leading-normal space-y-1">
+                    <p><strong>Филиал «Стародорожский центр ремесел»</strong></p>
+                    <p>Основан: <strong>1 июня 1997 года</strong></p>
+                    <p>Заведующий: <strong>Давыдкина Ольга Михайловна</strong></p>
+                </div>
+
+                <p class="text-zinc-600 leading-relaxed text-sm">
+                    Наш центр изучает современные тенденции в декоративно-прикладном искусстве, бережно хранит и восстанавливает этнографическое наследие Минского региона. В залах нашего учреждения представлена уникальная коллекция старинных предметов быта и изделий народных умельцев прошлых веков.
+                </p>
+                <p class="text-zinc-600 leading-relaxed text-sm">
+                    Все представленные в каталоге изделия создаются вручную народными мастерами из локальных экологических материалов: ржаной соломки, натурального белого и сурового льна, качественной художественной глины, шерсти.
+                </p>
+                
+                <div class="grid grid-cols-2 gap-4 pt-2">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-white text-belarus-red flex items-center justify-center rounded-lg shadow-sm border border-zinc-200">
+                            <i class="fa-solid fa-users text-lg"></i>
+                        </div>
+                        <div>
+                            <span class="block font-bold text-zinc-800 text-sm">10+</span>
+                            <span class="text-[10px] text-zinc-400">Народных мастеров</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-white text-amber-500 flex items-center justify-center rounded-lg shadow-sm border border-zinc-200">
+                            <i class="fa-solid fa-award text-lg"></i>
+                        </div>
+                        <div>
+                            <span class="block font-bold text-zinc-800 text-sm">500+</span>
+                            <span class="text-[10px] text-zinc-400">Уникальных изделий</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="masterclasses" class="py-12 sm:py-16 bg-white relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center space-y-2 mb-8 sm:mb-10">
+            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-belarus-dark">Живые Мастер-классы</h2>
+            <p class="text-zinc-500 text-xs sm:text-sm max-w-lg mx-auto">Попробуйте себя в роли народного творца! Мы регулярно проводим практические индивидуальные и групповые занятия.</p>
+        </div>
+
+        <div id="masterclasses-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            <!-- Сюда динамически загружаются мастер-классы -->
+        </div>
+
+        <div id="no-masterclasses" class="hidden text-center py-10">
+            <i class="fa-solid fa-chalkboard-user text-5xl text-zinc-300 mb-4"></i>
+            <h3 class="font-serif text-xl font-bold text-zinc-800">Мастер-классы скоро появятся</h3>
+            <p class="text-zinc-500 text-sm mt-2">Мастера Центра в данный момент обновляют расписание занятий.</p>
+        </div>
+    </div>
+</section>
+
+<section id="contacts" class="bg-zinc-900 text-white py-12 sm:py-16 relative">
+    <div class="absolute inset-0 opacity-5 pointer-events-none ornament-bg"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-start">
+            
+            <div class="space-y-6">
+                <span class="text-amber-400 font-bold uppercase text-xs tracking-wider">Приезжайте за красотой и опытом</span>
+                <h3 class="font-serif text-2xl sm:text-3xl font-bold">Контакты центра</h3>
+                <p class="text-zinc-400 text-xs sm:text-sm leading-relaxed">
+                    Свяжитесь с нами напрямую для приобретения сувенирной продукции, согласования индивидуальных корпоративных подарков или для записи на мастер-классы.
+                </p>
+
+                <div class="space-y-5 pt-4">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div>
+                            <span class="block text-xs text-zinc-400">Наш адрес:</span>
+                            <span class="block text-xs sm:text-sm font-semibold text-white leading-tight">222932, Минская область, г. Старые Дороги, ул. Первомайская, д. 27</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <div>
+                            <span class="block text-xs text-zinc-400">Телефоны для связи:</span>
+                            <span class="block text-xs sm:text-sm font-semibold text-white leading-tight">8 (01792) 54-2-83</span>
+                            <span class="block text-xs sm:text-sm font-semibold text-white leading-tight mt-1">8 (01792) 31-7-68</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <div>
+                            <span class="block text-xs text-zinc-400">Электронная почта:</span>
+                            <span class="block text-xs sm:text-sm font-semibold text-white break-all leading-tight">remeslastd@bibliostd.by</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div>
+                            <span class="block text-xs text-zinc-400">Режим работы центра:</span>
+                            <span class="block text-xs sm:text-sm font-semibold text-white leading-tight">Понедельник — Суббота: с 09:00 до 18:00</span>
+                            <span class="block text-[10px] text-zinc-500 mt-1">Воскресенье: Выходной</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 pt-2">
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-belarus-red hover:text-white transition-all text-zinc-400"><i class="fa-brands fa-vk text-lg"></i></a>
+                    <a href="https://instagram.com" target="_blank" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-belarus-red hover:text-white transition-all text-zinc-400"><i class="fa-brands fa-instagram text-lg"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-belarus-red hover:text-white transition-all text-zinc-400"><i class="fa-brands fa-youtube text-lg"></i></a>
+                </div>
+            </div>
+
+            <div id="contact-form-container" class="bg-zinc-800/80 backdrop-blur border border-zinc-700 rounded-2xl p-5 sm:p-8 transition-all duration-500">
+                <h4 class="font-serif text-lg sm:text-xl font-bold mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-paper-plane text-amber-400"></i>
+                    Написать мастерам
+                </h4>
+                <p class="text-zinc-400 text-xs mb-6">Оставьте сообщение, укажите интересующие изделия из каталога или мастер-класс. Дежурный мастер свяжется с вами в течение дня!</p>
+                
+                <form id="contact-masters-form" onsubmit="window.handleContactSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-[11px] text-zinc-400 mb-1" for="contact-name">Ваше имя</label>
+                        <input type="text" id="contact-name" required class="w-full px-4 py-2 bg-zinc-700/50 border border-zinc-600 rounded-lg focus:ring-1 focus:ring-amber-400 focus:border-amber-400 focus:outline-none text-xs text-white">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-zinc-400 mb-1" for="contact-phone">Телефон для связи</label>
+                        <input type="tel" id="contact-phone" required placeholder="+375 (__) ___-__-__" class="w-full px-4 py-2 bg-zinc-700/50 border border-zinc-600 rounded-lg focus:ring-1 focus:ring-amber-400 focus:border-amber-400 focus:outline-none text-xs text-white">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-zinc-400 mb-1" for="contact-msg">Запрос, пожелания или вопросы</label>
+                        <textarea id="contact-msg" rows="4" required class="w-full px-4 py-2 bg-zinc-700/50 border border-zinc-600 rounded-lg focus:ring-1 focus:ring-amber-400 focus:border-amber-400 focus:outline-none text-xs text-white" placeholder="Опишите, какие сувениры или вопросы вас интересуют..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-zinc-950 font-bold rounded-lg transition-colors flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-solid fa-envelope"></i> Отправить сообщение
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<footer class="bg-zinc-950 text-zinc-500 text-[11px] py-8 border-t border-zinc-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left sm:flex sm:justify-between sm:items-center">
+        <p>
+            <span>&copy; 2026 Филиал «Стародорожский районный центр ремёсел». Все права сохранены.</span>
+        </p>
+        <p class="mt-2 sm:mt-0 select-none">
+            Сделано с уважением к белорусской традиционной культуре 
+            <span onclick="window.triggerSecretEntrance()" class="cursor-pointer hover:scale-110 inline-block transition-transform duration-200" title="Радзіма мая — Беларусь">🇧🇾</span>
+        </p>
+    </div>
+</footer>
+
+<button id="btn-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 right-6 z-40 bg-belarus-red hover:bg-red-700 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 translate-y-20 opacity-0 pointer-events-none focus:outline-none">
+    <i class="fa-solid fa-arrow-up"></i>
+</button>
+
+<div id="quickview-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-0 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-t-2xl sm:rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative border border-zinc-200">
+        <button onclick="window.closeQuickView()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 flex items-center justify-center transition-colors z-10">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="p-5 sm:p-8 overflow-y-auto" id="quickview-content"></div>
+    </div>
+</div>
+
+<div id="favorites-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-0 sm:p-4">
+    <div class="bg-white rounded-t-2xl sm:rounded-2xl max-w-lg w-full shadow-2xl relative border border-zinc-200 p-5 sm:p-6 max-h-[85vh] sm:max-h-[80vh] flex flex-col">
+        <button onclick="window.toggleFavoritesModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 flex items-center justify-center transition-colors z-10">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <h3 class="font-serif text-lg sm:text-2xl font-bold text-belarus-dark mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-heart text-belarus-red"></i> Ваши закладки
+        </h3>
+        <div id="favorites-list" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-1"></div>
+    </div>
+</div>
+
+<!-- НОВОЕ: Модальное окно КОРЗИНЫ -->
+<div id="cart-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-0 sm:p-4">
+    <div class="bg-white rounded-t-2xl sm:rounded-2xl max-w-lg w-full shadow-2xl relative border border-zinc-200 p-5 sm:p-6 max-h-[85vh] sm:max-h-[80vh] flex flex-col">
+        <button onclick="window.toggleCartModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 flex items-center justify-center transition-colors z-10">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <h3 class="font-serif text-lg sm:text-2xl font-bold text-belarus-dark mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-basket-shopping text-amber-500"></i> Корзина запросов
+        </h3>
+        <p class="text-xs text-zinc-500 mb-3">Оставьте заявку на эти изделия, и мастера свяжутся с вами для уточнения деталей и наличия.</p>
+        <div id="cart-list" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-1"></div>
+        <div id="cart-footer" class="hidden mt-4 pt-4 border-t border-zinc-200">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-sm font-bold text-zinc-600">Ориентировочная сумма:</span>
+                <span id="cart-total" class="text-xl font-bold text-belarus-red">0.00 BYN</span>
+            </div>
+            <button onclick="window.checkoutCart()" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-zinc-900 font-bold rounded-lg text-sm transition-colors shadow">Оформить заявку</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="fixed bottom-5 right-5 z-[60] transform translate-y-12 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 bg-zinc-900/95 backdrop-blur text-white px-5 py-3 rounded-xl shadow-2xl max-w-[90vw] sm:max-w-md border border-zinc-700/50">
+    <div class="text-amber-400 shrink-0" id="toast-icon">
+        <i class="fa-solid fa-circle-check"></i>
+    </div>
+    <p class="text-xs sm:text-sm font-medium leading-tight text-white" id="toast-message">Успешно!</p>
+</div>
+
+<div id="craft-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-0 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-t-2xl sm:rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative border border-zinc-200 p-5 sm:p-8">
+        <button onclick="window.closeCraftModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 flex items-center justify-center transition-colors z-10">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div id="craft-modal-content" class="text-left space-y-4"></div>
+    </div>
+</div>
+
+<div id="pin-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-zinc-200 relative text-center space-y-3.5">
+        <button onclick="window.closePinModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 flex items-center justify-center transition-colors">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto text-xl">
+            <i class="fa-solid fa-lock"></i>
+        </div>
+        <h3 class="font-serif text-xl font-bold text-zinc-900">Вход для мастеров</h3>
+        <p class="text-zinc-500 text-[11px] leading-relaxed">Введите учетные данные, созданные в панели управления Firebase, чтобы получить доступ.</p>
+        
+        <div class="space-y-2 text-left">
+            <input type="email" id="master-email-input" placeholder="Email мастера" class="w-full px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:outline-none transition-all">
+            <input type="password" id="master-password-input" placeholder="Пароль" class="w-full px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:outline-none transition-all">
+        </div>
+        <button onclick="window.verifyMasterPin()" class="w-full py-3 bg-belarus-red hover:bg-red-700 text-white font-bold rounded-xl text-sm transition-colors shadow-md">Войти в панель</button>
+    </div>
+</div>
+
+<!-- БОЛЬШАЯ И УДОБНАЯ ПАНЕЛЬ УПРАВЛЕНИЯ -->
+<div id="admin-panel-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-0 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-none sm:rounded-2xl w-full max-w-6xl h-full sm:h-[95vh] flex flex-col shadow-2xl relative border border-zinc-200">
+        <div class="p-5 sm:p-6 border-b border-zinc-200 flex items-center justify-between bg-zinc-50 rounded-t-2xl shrink-0">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-belarus-red text-white rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                <div>
+                    <h3 class="font-serif text-lg sm:text-2xl font-bold text-zinc-900 leading-tight">Панель управления</h3>
+                    <span id="admin-panel-status" class="text-xs text-zinc-400 uppercase tracking-widest font-semibold">Подключение к облаку...</span>
+                </div>
+            </div>
+            <button onclick="window.closeAdminPanel()" class="w-10 h-10 rounded-full bg-zinc-200 hover:bg-zinc-300 text-zinc-700 flex items-center justify-center transition-colors text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="flex border-b border-zinc-200 bg-zinc-100/50 shrink-0">
+            <button onclick="window.setAdminTab('products')" id="tab-btn-products" class="flex-1 py-4 text-xs sm:text-sm font-bold border-b-2 border-belarus-red text-belarus-red focus:outline-none transition-all">
+                <i class="fa-solid fa-boxes-stacked mr-2"></i>Управление товарами
+            </button>
+            <button onclick="window.setAdminTab('masterclasses')" id="tab-btn-masterclasses" class="flex-1 py-4 text-xs sm:text-sm font-bold border-b-2 border-transparent text-zinc-500 hover:text-zinc-700 focus:outline-none transition-all">
+                <i class="fa-solid fa-graduation-cap mr-2"></i>Мастер-классы
+            </button>
+            
+            <!-- ИСПРАВЛЕНИЕ: Выравнивание бейджика 'Входящие заявки' -->
+            <button onclick="window.setAdminTab('inquiries')" id="tab-btn-inquiries" class="flex-1 py-4 text-xs sm:text-sm font-bold border-b-2 border-transparent text-zinc-500 hover:text-zinc-700 focus:outline-none transition-all">
+                <span class="flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-envelope"></i>Входящие заявки
+                    <span id="admin-inquiries-badge" class="hidden bg-belarus-red text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm leading-none border border-white">0</span>
+                </span>
+            </button>
+        </div>
+
+        <!-- ВКЛАДКА: ТОВАРЫ -->
+        <div id="admin-products-view" class="flex-grow overflow-y-hidden grid grid-cols-1 lg:grid-cols-12 h-full">
+            <form onsubmit="window.handleSaveProduct(event)" class="lg:col-span-4 p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-zinc-200 space-y-4 overflow-y-auto bg-zinc-50/50 custom-scrollbar pb-10">
+                <h4 id="admin-form-title" class="font-serif font-bold text-zinc-800 text-lg border-b border-zinc-200 pb-3 flex items-center gap-2"><i class="fa-solid fa-circle-plus text-belarus-red"></i> Добавить изделие</h4>
+                <input type="hidden" id="admin-prod-id" value="">
+                
+                <div>
+                    <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-prod-name">Название сувенира</label>
+                    <input type="text" id="admin-prod-name" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:border-belarus-red focus:outline-none transition-shadow">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-prod-category">Категория</label>
+                        <!-- ИСПРАВЛЕНИЕ: Красивый выпадающий список -->
+                        <select id="admin-prod-category" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-belarus-red transition-shadow appearance-none cursor-pointer" style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23bd081c%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 1rem top 50%; background-size: 0.65rem auto;">
+                            <option value="ceramics">🏺 Керамика</option>
+                            <option value="embroidery">🧵 Ткачество</option>
+                            <option value="souvenirs">🌾 Сувениры</option>
+                            <option value="clothing">👗 Одежда</option>
+                            <option value="corporate">🏢 Корпоративные</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-prod-price">Цена (BYN)</label>
+                        <input type="number" id="admin-prod-price" required step="0.01" min="0" class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:border-belarus-red focus:outline-none transition-shadow">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-prod-master">ФИО мастера Центра</label>
+                    <input type="text" id="admin-prod-master" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:border-belarus-red focus:outline-none transition-shadow" placeholder="Например: Дмитрий Алексеевич Вечер">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-prod-material">Материалы</label>
+                        <input type="text" id="admin-prod-material" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:border-belarus-red focus:outline-none transition-shadow" placeholder="Лён, глина, рожь">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-prod-dims">Размеры / Объем</label>
+                        <input type="text" id="admin-prod-dims" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:border-belarus-red focus:outline-none transition-shadow" placeholder="30 см х 30 см">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-prod-technique">Техника изготовления</label>
+                    <input type="text" id="admin-prod-technique" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:border-belarus-red focus:outline-none transition-shadow" placeholder="Молочение, вышивка крестом">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-zinc-600 mb-1.5">Описание изделия (Форматированный текст)</label>
+                    <!-- Богатый текстовый редактор Quill -->
+                    <div id="editor-container" class="h-40 border border-zinc-200 rounded-xl"></div>
+                </div>
+
+                <div class="space-y-3 border-t border-zinc-200 pt-4">
+                    <label class="block text-sm font-bold text-zinc-800">Изображение изделия</label>
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="bg-white p-3 rounded-xl border border-zinc-200 shadow-sm">
+                            <span class="block text-xs font-semibold text-zinc-600 mb-2">Способ 1: Загрузить фото с устройства</span>
+							<input type="file" id="admin-prod-file" accept="image/*" onchange="window.handleAdminImageUpload(event)" class="w-full text-sm text-zinc-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-belarus-redlight file:text-belarus-red hover:file:bg-red-100 cursor-pointer">
+                            <div id="upload-progress" class="hidden mt-2 text-xs font-bold text-blue-500"></div>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-zinc-200 shadow-sm">
+                            <span class="block text-xs font-semibold text-zinc-600 mb-2">Способ 2: Прямая ссылка или Эмодзи</span>
+                            <input type="text" id="admin-prod-image-url" class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-lg text-sm focus:ring-2 focus:ring-belarus-red focus:border-belarus-red focus:outline-none transition-shadow" placeholder="https://...jpg или 🏺">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-3 border-t border-zinc-200 pt-4">
+                    <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-zinc-200 shadow-sm cursor-pointer hover:bg-zinc-50 transition">
+                        <input type="checkbox" id="admin-prod-draft" class="w-5 h-5 text-belarus-red bg-zinc-100 border-zinc-300 rounded focus:ring-belarus-red cursor-pointer">
+                        <label for="admin-prod-draft" class="text-sm font-semibold text-zinc-700 cursor-pointer flex-grow select-none">Скрыть товар (Сделать черновиком)</label>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-grow py-3 bg-belarus-red hover:bg-red-700 text-white font-bold rounded-xl text-sm transition-colors shadow-md">Сохранить</button>
+                    <button type="button" onclick="window.resetAdminForm()" class="px-5 py-3 bg-zinc-200 hover:bg-zinc-300 text-zinc-700 font-bold rounded-xl text-sm transition-colors">Очистить</button>
+                </div>
+            </form>
+
+            <div class="lg:col-span-8 p-5 sm:p-6 flex flex-col h-full overflow-hidden">
+                <div class="flex items-center justify-between border-b border-zinc-200 pb-3 mb-5 shrink-0">
+                    <h4 class="font-serif font-bold text-zinc-800 text-lg flex items-center gap-2"><i class="fa-solid fa-list text-belarus-red"></i> Текущие изделия (<span id="admin-total-count">0</span>)</h4>
+                </div>
+
+                <div class="mb-5 bg-blue-50 p-3 rounded-xl border border-blue-100 shadow-sm flex items-center gap-3 shrink-0 text-xs text-blue-700">
+                    <i class="fa-solid fa-circle-info text-lg"></i>
+                    <p><strong>Сортировка:</strong> Зажмите иконку <i class="fa-solid fa-grip-vertical px-1"></i> слева от товара и перетащите его мышкой, чтобы изменить порядок отображения на сайте.</p>
+                </div>
+
+                <div id="admin-products-list" class="space-y-3 overflow-y-auto flex-grow custom-scrollbar pr-2 pb-10"></div>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА: МАСТЕР-КЛАССЫ -->
+        <div id="admin-masterclasses-view" class="hidden flex-grow overflow-y-hidden grid grid-cols-1 lg:grid-cols-12 h-full">
+            <form onsubmit="window.handleSaveMasterclass(event)" class="lg:col-span-4 p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-zinc-200 space-y-4 overflow-y-auto bg-zinc-50/50 custom-scrollbar pb-10">
+                <h4 id="admin-mc-form-title" class="font-serif font-bold text-zinc-800 text-lg border-b border-zinc-200 pb-3 flex items-center gap-2"><i class="fa-solid fa-circle-plus text-belarus-red"></i> Добавить занятие</h4>
+                <input type="hidden" id="admin-mc-id" value="">
+                
+                <div>
+                    <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-mc-title">Название занятия</label>
+                    <input type="text" id="admin-mc-title" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:outline-none transition-shadow">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-mc-type">Вид ремесла</label>
+                        <input type="text" id="admin-mc-type" required placeholder="🌾 Соломоплетение" class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:outline-none transition-shadow">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-mc-duration">Длительность</label>
+                        <input type="text" id="admin-mc-duration" required placeholder="1.5 часа" class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:outline-none transition-shadow">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-mc-desc">Описание мастер-класса</label>
+                    <textarea id="admin-mc-desc" required rows="5" class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:outline-none transition-shadow" placeholder="Чему научатся участники на занятии..."></textarea>
+                </div>
+
+                <!-- НОВОЕ: Черновик для мастеркласса -->
+                <div class="space-y-3 border-t border-zinc-200 pt-4">
+                    <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-zinc-200 shadow-sm cursor-pointer hover:bg-zinc-50 transition">
+                        <input type="checkbox" id="admin-mc-draft" class="w-5 h-5 text-belarus-red bg-zinc-100 border-zinc-300 rounded focus:ring-belarus-red cursor-pointer">
+                        <label for="admin-mc-draft" class="text-sm font-semibold text-zinc-700 cursor-pointer flex-grow select-none">Скрыть занятие (Черновик)</label>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-grow py-3 bg-belarus-red hover:bg-red-700 text-white font-bold rounded-xl text-sm transition-colors shadow-md">Сохранить</button>
+                    <button type="button" onclick="window.resetMcForm()" class="px-5 py-3 bg-zinc-200 hover:bg-zinc-300 text-zinc-700 font-bold rounded-xl text-sm transition-colors">Очистить</button>
+                </div>
+            </form>
+
+            <div class="lg:col-span-8 p-5 sm:p-6 flex flex-col h-full overflow-hidden">
+                <div class="flex items-center justify-between border-b border-zinc-200 pb-3 mb-5 shrink-0">
+                    <h4 class="font-serif font-bold text-zinc-800 text-lg flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-belarus-red"></i> Активные мастер-классы (<span id="admin-mc-total-count">0</span>)</h4>
+                </div>
+                <div id="admin-mc-list" class="space-y-3 overflow-y-auto flex-grow custom-scrollbar pr-2 pb-10"></div>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА: ВХОДЯЩИЕ ЗАЯВКИ -->
+        <div id="admin-inquiries-view" class="hidden flex-grow overflow-y-hidden p-5 sm:p-6 flex flex-col bg-zinc-50/35 h-full">
+            <div class="flex items-center justify-between border-b border-zinc-200 pb-3 mb-5 shrink-0 max-w-4xl mx-auto w-full">
+                <h4 class="font-serif font-bold text-zinc-800 text-lg flex items-center gap-2"><i class="fa-solid fa-envelope-open-text text-belarus-red"></i> Входящие сообщения</h4>
+                <button onclick="window.clearAllInquiries()" class="text-sm text-zinc-500 hover:text-belarus-red font-bold transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-trash-can"></i> Очистить корзину
+                </button>
+            </div>
+            <div class="w-full max-w-4xl mx-auto flex-grow overflow-y-auto custom-scrollbar pr-2 pb-10">
+                <div id="admin-inquiries-list" class="space-y-4"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getDatabase, ref, set, remove, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyA5GUUN_Ux6ctirYN4Y63wW0kgpQQP0FfU",
+        authDomain: "starodorozhski-catalog.firebaseapp.com",
+        projectId: "starodorozhski-catalog",
+        storageBucket: "starodorozhski-catalog.firebasestorage.app",
+        messagingSenderId: "745366796468",
+        appId: "1:745366796468:web:2c14b8d7713e10d38a3fe1",
+        databaseURL: "https://starodorozhski-catalog-default-rtdb.europe-west1.firebasedatabase.app/"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    let PRODUCTS = [];
+    let MASTERCLASSES = [];
+    let INQUIRIES = [];
+    
+    let favorites = [];
+    let cart = []; // НОВОЕ: Массив для Корзины
+    
+    let currentCategory = 'all';
+    let searchQuery = '';
+    let currentSort = 'default';
+    
+    // Переменные админки
+    let IMGBB_API_KEY = null;
+    let quill;
+
+    window.showToast = function(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toast-message');
+        const toastIcon = document.getElementById('toast-icon');
+        if (!toast) return;
+        toastMsg.innerText = message;
+        if (type === 'error') toastIcon.innerHTML = '<i class="fa-solid fa-circle-exclamation text-red-500 text-lg"></i>';
+        else if (type === 'info') toastIcon.innerHTML = '<i class="fa-solid fa-circle-info text-blue-400 text-lg"></i>';
+        else if (type === 'fav') toastIcon.innerHTML = '<i class="fa-solid fa-heart text-belarus-red text-lg"></i>';
+        else if (type === 'cart') toastIcon.innerHTML = '<i class="fa-solid fa-basket-shopping text-amber-500 text-lg"></i>'; // Иконка для корзины
+        else toastIcon.innerHTML = '<i class="fa-solid fa-circle-check text-green-400 text-lg"></i>';
+        
+        toast.classList.remove('translate-y-12', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+        clearTimeout(toast.timeoutId);
+        toast.timeoutId = setTimeout(() => {
+            toast.classList.remove('translate-y-0', 'opacity-100');
+            toast.classList.add('translate-y-12', 'opacity-0');
+        }, 3000);
+    };
+
+    window.triggerSecretEntrance = function() {
+        if (!window.secretCount) window.secretCount = 0;
+        window.secretCount++;
+        clearTimeout(window.secretTimeout);
+        if (window.secretCount >= 3) {
+            window.secretCount = 0;
+            window.promptMasterPin();
+            window.showToast("Секретный вход активирован! 🔑", "info");
+        } else {
+            window.secretTimeout = setTimeout(() => { window.secretCount = 0; }, 1200);
+        }
+    };
+
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey && e.code === 'KeyM') { e.preventDefault(); window.promptMasterPin(); window.showToast("Секретный вход ⌨️", "info"); }
+    });
+
+    function renderSkeletons() {
+        const grid = document.getElementById('products-grid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        for (let i = 0; i < 8; i++) {
+            grid.innerHTML += `<div class="bg-white rounded-2xl border border-zinc-100 p-4 shadow-sm h-[320px] flex flex-col gap-3"><div class="w-full h-40 rounded-xl skeleton-pulse"></div><div class="h-3 w-1/3 rounded skeleton-pulse"></div><div class="h-5 w-4/5 rounded skeleton-pulse"></div><div class="mt-auto pt-3 border-t flex justify-between"><div class="h-6 w-1/3 rounded skeleton-pulse"></div><div class="h-8 w-1/3 rounded skeleton-pulse"></div></div></div>`;
+        }
+    }
+
+    const syncWithFirebaseCloud = async () => {
+        renderSkeletons();
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user && !user.isAnonymous) {
+                const statusEl = document.getElementById('admin-panel-status');
+                if (statusEl) { statusEl.innerText = "Авторизован 🔐"; statusEl.className = "text-[10px] text-green-600 font-bold uppercase tracking-widest"; }
+                
+                try {
+                    const snapshot = await get(ref(db, 'secrets/imgbb_key'));
+                    if(snapshot.exists()) {
+                        IMGBB_API_KEY = snapshot.val();
+                    }
+                } catch(keyErr) {
+                    console.error("❌ Ошибка прав доступа при чтении ключа ImgBB:", keyErr);
+                }
+            }
+            
+            onValue(ref(db, 'products'), (snapshot) => {
+                const items = []; snapshot.forEach(child => { items.push(child.val()); });
+                PRODUCTS = items.sort((a, b) => (a.order || 0) - (b.order || 0)); 
+                
+                // Очистка удаленных товаров из закладок и корзины
+                favorites = favorites.filter(favId => PRODUCTS.some(p => p.id === favId));
+                cart = cart.filter(cartId => PRODUCTS.some(p => p.id === cartId));
+                
+                localStorage.setItem('starodorozhski_fav_v5', JSON.stringify(favorites));
+                localStorage.setItem('starodorozhski_cart_v1', JSON.stringify(cart));
+                
+                window.updateFavBadge(); 
+                window.updateCartBadge();
+                window.renderProducts(); 
+                window.renderAdminProductsList();
+            });
+            onValue(ref(db, 'masterclasses'), (snapshot) => {
+                const items = []; snapshot.forEach(child => { items.push(child.val()); });
+                MASTERCLASSES = items; 
+                window.renderMasterclasses(); 
+                window.renderAdminMasterclassesList();
+            });
+            onValue(ref(db, 'inquiries'), (snapshot) => {
+                const items = []; snapshot.forEach(child => { items.push({ ...child.val(), databaseId: child.key }); });
+                INQUIRIES = items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                window.updateInquiriesBadge(); window.renderAdminInquiriesList();
+            });
+        });
+
+        try { if (!auth.currentUser) await signInAnonymously(auth); } catch (e) {}
+    };
+
+    function loadLocalStorageData() { 
+        try { 
+            const storedFav = localStorage.getItem('starodorozhski_fav_v5'); 
+            if (storedFav) favorites = JSON.parse(storedFav); 
+            window.updateFavBadge(); 
+
+            const storedCart = localStorage.getItem('starodorozhski_cart_v1'); 
+            if (storedCart) cart = JSON.parse(storedCart); 
+            window.updateCartBadge(); 
+        } catch (e) {} 
+    }
+
+    window.handleImageError = function(img, category) {
+        let emoji = '📦';
+        if (category === 'ceramics') emoji = '🏺'; if (category === 'embroidery') emoji = '🧵'; if (category === 'souvenirs') emoji = '🌾'; if (category === 'clothing') emoji = '👗';
+        img.parentElement.innerHTML = `<div class="text-6xl filter drop-shadow-md">${emoji}</div><div class="absolute inset-0 opacity-5 ornament-bg"></div>`;
+    };
+
+    window.renderProducts = function() {
+        const grid = document.getElementById('products-grid'); const noProd = document.getElementById('no-products');
+        if (!grid) return; grid.innerHTML = '';
+        
+        let filtered = PRODUCTS.filter(p => { 
+            if (p.draft) return false; 
+            const matchCat = (currentCategory === 'all' || p.category === currentCategory); 
+            const matchSearch = (p.name||"").toLowerCase().includes(searchQuery.toLowerCase()) || (p.master||"").toLowerCase().includes(searchQuery.toLowerCase()); 
+            return matchCat && matchSearch; 
+        });
+        
+        if (currentSort === 'price-asc') filtered.sort((a, b) => (a.price || 0) - (b.price || 0));
+        if (currentSort === 'price-desc') filtered.sort((a, b) => (b.price || 0) - (a.price || 0));
+        if (document.getElementById('stats-total-count')) document.getElementById('stats-total-count').innerText = filtered.length;
+        if (filtered.length === 0) { if (noProd) noProd.classList.remove('hidden'); grid.classList.add('hidden'); return; } else { if (noProd) noProd.classList.add('hidden'); grid.classList.remove('hidden'); }
+        
+        filtered.forEach(prod => {
+            const isFav = favorites.includes(prod.id);
+            const inCart = cart.includes(prod.id); // Проверяем, есть ли в корзине
+            
+            let bgCol = "bg-amber-50"; if(prod.category==='embroidery') bgCol="bg-red-50"; if(prod.category==='ceramics') bgCol="bg-orange-50/80";
+            const isImg = prod.image && (prod.image.startsWith('http') || prod.image.startsWith('data:'));
+            
+            // ИСПРАВЛЕНИЕ: Кнопка корзины вместо "Спросить"
+            grid.innerHTML += `
+                <div class="bg-white rounded-2xl border border-zinc-100 p-4 sm:p-5 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group relative">
+                    ${prod.featured ? `<span class="absolute top-3 left-3 bg-belarus-red text-white text-[9px] font-bold px-2 py-0.5 rounded-full z-10">Топ</span>` : ''}
+                    <div class="w-full h-40 sm:h-44 ${bgCol} rounded-xl flex items-center justify-center mb-4 relative overflow-hidden group-hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="window.openQuickView(${prod.id})">
+                        ${isImg ? `<img src="${prod.image}" class="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110" onerror="window.handleImageError(this, '${prod.category}')">` : `<div class="text-6xl drop-shadow-md">${prod.image||'📦'}</div>`}
+                    </div>
+                    <span class="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest block mb-1">${prod.categoryName||'Сувенир'}</span>
+                    <h4 class="font-serif font-bold text-zinc-900 text-sm sm:text-base leading-snug group-hover:text-belarus-red transition-colors cursor-pointer line-clamp-2" onclick="window.openQuickView(${prod.id})">${prod.name}</h4>
+                    <div class="mt-auto pt-4 border-t border-zinc-100">
+                        <div class="flex items-baseline justify-between mb-3"><span class="text-sm sm:text-lg font-bold text-belarus-dark">${Number(prod.price||0).toFixed(2)} <span class="text-xs">BYN</span></span></div>
+                        <div class="grid grid-cols-4 gap-2">
+                            <button onclick="window.openQuickView(${prod.id})" class="col-span-1 bg-zinc-50 hover:bg-zinc-100 text-zinc-600 rounded-lg p-2.5 border transition-colors"><i class="fa-solid fa-eye"></i></button>
+                            <button onclick="window.toggleFavorite(${prod.id}, this)" class="col-span-1 bg-zinc-50 hover:bg-zinc-100 ${isFav?'text-belarus-red':'text-zinc-600'} rounded-lg p-2.5 border transition-colors outline-none"><i class="${isFav?'fa-solid':'fa-regular'} fa-heart"></i></button>
+                            <button onclick="window.toggleCart(${prod.id})" class="col-span-2 ${inCart ? 'bg-amber-500 hover:bg-amber-600 text-zinc-900' : 'bg-zinc-800 hover:bg-black text-white'} font-bold rounded-lg text-xs py-2 px-2.5 transition-colors">
+                                ${inCart ? '<i class="fa-solid fa-check"></i> В корзине' : 'В корзину'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    };
+
+    window.renderMasterclasses = function() {
+        const grid = document.getElementById('masterclasses-grid'); const noMc = document.getElementById('no-masterclasses');
+        if(!grid) return; grid.innerHTML = '';
+        
+        // НОВОЕ: Скрываем черновики мастер-классов
+        const filteredMc = MASTERCLASSES.filter(mc => !mc.draft);
+        
+        if (filteredMc.length === 0) { grid.classList.add('hidden'); if(noMc) noMc.classList.remove('hidden'); return; } else { grid.classList.remove('hidden'); if(noMc) noMc.classList.add('hidden'); }
+        
+        filteredMc.forEach(mc => {
+            grid.innerHTML += `<div class="bg-zinc-50 rounded-2xl border border-zinc-100 p-5 flex flex-col justify-between hover:shadow-lg transition"><div><span class="text-[11px] font-bold text-amber-600 uppercase tracking-widest mb-2 block">${mc.type}</span><h3 class="font-serif text-lg font-bold text-zinc-900 mb-2">${mc.title}</h3><p class="text-xs text-zinc-500 mb-4">${mc.desc}</p></div><div class="flex items-center justify-between border-t pt-3 mt-2"><span class="text-xs font-semibold text-zinc-600"><i class="fa-regular fa-clock"></i> ${mc.duration}</span><button onclick="window.requestMasterclass('${mc.title}')" class="px-4 py-2 bg-belarus-red hover:bg-red-700 text-white text-xs font-bold rounded-lg">Записаться</button></div></div>`;
+        });
+    };
+
+    window.setCategory = function(cat) { currentCategory = cat; document.querySelectorAll('.category-btn').forEach(btn => btn.className = "category-btn shrink-0 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-zinc-100 text-zinc-600 hover:bg-zinc-200"); const activeBtn = document.getElementById(`btn-cat-${cat}`); if(activeBtn) { activeBtn.className = "category-btn shrink-0 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-belarus-red text-white shadow-md"; activeBtn.scrollIntoView({behavior:'smooth', inline:'center'}); } window.renderProducts(); };
+    window.applyFilters = function() { searchQuery = document.getElementById('search-input').value; window.renderProducts(); };
+    window.resetFilters = function() { document.getElementById('search-input').value = ''; window.selectSortOption('default','По умолчанию'); searchQuery = ''; window.setCategory('all'); };
+    window.toggleSortDropdown = function(e) { e.stopPropagation(); document.getElementById('sort-dropdown-options').classList.toggle('hidden'); document.getElementById('sort-dropdown-arrow').classList.toggle('rotate-180'); };
+    window.selectSortOption = function(val, label) { currentSort = val; document.getElementById('sort-dropdown-label').innerText = label; document.getElementById('sort-dropdown-options').classList.add('hidden'); document.getElementById('sort-dropdown-arrow').classList.remove('rotate-180'); window.applyFilters(); };
+    document.addEventListener('click', (e) => { const drop = document.getElementById('custom-sort-dropdown'); if (drop && !drop.contains(e.target)) { document.getElementById('sort-dropdown-options')?.classList.add('hidden'); document.getElementById('sort-dropdown-arrow')?.classList.remove('rotate-180'); } });
+    
+    // ЛОГИКА ИЗБРАННОГО
+    window.toggleFavorite = function(id, btnElement) { 
+        const idx = favorites.indexOf(id); 
+        if (btnElement) {
+            btnElement.classList.remove('heart-animate');
+            void btnElement.offsetWidth;
+            btnElement.classList.add('heart-animate');
+            const icon = btnElement.querySelector('i');
+            if (idx === -1) { icon.classList.remove('fa-regular', 'text-zinc-600'); icon.classList.add('fa-solid'); btnElement.classList.add('text-belarus-red'); btnElement.classList.remove('text-zinc-600'); } 
+            else { icon.classList.remove('fa-solid'); icon.classList.add('fa-regular', 'text-zinc-600'); btnElement.classList.remove('text-belarus-red'); btnElement.classList.add('text-zinc-600'); }
+        }
+        if (idx === -1) { favorites.push(id); window.showToast("Добавлено в закладки", 'fav'); } 
+        else { favorites.splice(idx, 1); window.showToast("Удалено из закладок", 'info'); } 
+        localStorage.setItem('starodorozhski_fav_v5', JSON.stringify(favorites)); 
+        window.updateFavBadge(); window.renderFavoritesList(); 
+    };
+    window.updateFavBadge = function() { const badge = document.getElementById('fav-badge'); if (badge) { if (favorites.length > 0) { badge.innerText = favorites.length; badge.classList.remove('hidden'); } else badge.classList.add('hidden'); } };
+    window.toggleFavoritesModal = function() { document.getElementById('favorites-modal').classList.toggle('hidden'); window.renderFavoritesList(); };
+    window.renderFavoritesList = function() { const list = document.getElementById('favorites-list'); if (!list) return; list.innerHTML = ''; if (favorites.length === 0) { list.innerHTML = `<div class="text-center py-10 text-zinc-400">Список пуст.</div>`; return; } favorites.forEach(id => { const prod = PRODUCTS.find(p => p.id === id); if (!prod) return; const isImg = prod.image && (prod.image.startsWith('http') || prod.image.startsWith('data:')); list.innerHTML += `<div class="flex items-center justify-between bg-zinc-50 p-3 rounded-xl border gap-3"><div class="flex items-center gap-3"><div class="w-10 h-10 flex items-center justify-center bg-white rounded border">${isImg?`<img src="${prod.image}" class="w-full h-full object-cover">`:`<span>${prod.image}</span>`}</div><div><h4 class="text-xs font-bold truncate">${prod.name}</h4><span class="text-xs text-belarus-red">${Number(prod.price).toFixed(2)} BYN</span></div></div><div class="flex gap-1"><button onclick="window.requestInquiry(${prod.id}); window.toggleFavoritesModal();" class="p-2 text-zinc-600" title="Спросить"><i class="fa-solid fa-comment-dots"></i></button><button onclick="window.toggleFavorite(${prod.id})" class="p-2 text-zinc-400" title="Удалить"><i class="fa-solid fa-trash-can"></i></button></div></div>`; }); };
+
+    // НОВОЕ: ЛОГИКА КОРЗИНЫ
+    window.toggleCart = function(id) {
+        const idx = cart.indexOf(id);
+        if (idx === -1) { 
+            cart.push(id); 
+            window.showToast("Добавлено в корзину", 'cart'); 
+        } else { 
+            cart.splice(idx, 1); 
+            window.showToast("Удалено из корзины", 'info'); 
+        }
+        localStorage.setItem('starodorozhski_cart_v1', JSON.stringify(cart));
+        window.updateCartBadge();
+        window.renderProducts(); // Обновляем кнопки в каталоге
+        window.renderCartList(); // Обновляем список, если модалка открыта
+    };
+    window.updateCartBadge = function() { const badge = document.getElementById('cart-badge'); if (badge) { if (cart.length > 0) { badge.innerText = cart.length; badge.classList.remove('hidden'); } else badge.classList.add('hidden'); } };
+    window.toggleCartModal = function() { document.getElementById('cart-modal').classList.toggle('hidden'); window.renderCartList(); };
+    window.renderCartList = function() { 
+        const list = document.getElementById('cart-list'); 
+        const footer = document.getElementById('cart-footer');
+        const totalEl = document.getElementById('cart-total');
+        if (!list) return; 
+        list.innerHTML = ''; 
+        
+        if (cart.length === 0) { 
+            list.innerHTML = `<div class="text-center py-10 text-zinc-400"><i class="fa-solid fa-basket-shopping text-4xl mb-3 opacity-20 block"></i>Корзина пуста.</div>`; 
+            footer.classList.add('hidden');
+            return; 
+        } 
+        
+        let totalSum = 0;
+        footer.classList.remove('hidden');
+        
+        cart.forEach(id => { 
+            const prod = PRODUCTS.find(p => p.id === id); 
+            if (!prod) return; 
+            totalSum += Number(prod.price || 0);
+            
+            const isImg = prod.image && (prod.image.startsWith('http') || prod.image.startsWith('data:')); 
+            list.innerHTML += `
+                <div class="flex items-center justify-between bg-zinc-50 p-3 rounded-xl border gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-12 h-12 flex items-center justify-center bg-white rounded border shrink-0">${isImg?`<img src="${prod.image}" class="w-full h-full object-cover rounded">`:`<span class="text-xl">${prod.image}</span>`}</div>
+                        <div class="min-w-0">
+                            <h4 class="text-xs font-bold text-zinc-800 truncate">${prod.name}</h4>
+                            <span class="text-xs text-belarus-red font-bold">${Number(prod.price).toFixed(2)} BYN</span>
+                        </div>
+                    </div>
+                    <button onclick="window.toggleCart(${prod.id})" class="p-2 text-zinc-400 hover:text-red-500 transition shrink-0" title="Удалить"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>`; 
+        }); 
+        
+        totalEl.innerText = totalSum.toFixed(2) + ' BYN';
+    };
+
+    // НОВОЕ: Оформление корзины
+    window.checkoutCart = function() {
+        if (cart.length === 0) return;
+        
+        let msg = "Здравствуйте! Я хочу оформить заказ на следующие изделия:\n\n";
+        let sum = 0;
+        
+        cart.forEach((id, index) => {
+            const prod = PRODUCTS.find(p => p.id === id);
+            if(prod) {
+                msg += `${index + 1}. ${prod.name} — ${Number(prod.price).toFixed(2)} BYN\n`;
+                sum += Number(prod.price);
+            }
+        });
+        
+        msg += `\nИтого ориентировочно: ${sum.toFixed(2)} BYN.\nСвяжитесь со мной, пожалуйста.`;
+        
+        document.getElementById('contact-msg').value = msg; 
+        window.toggleCartModal(); // Закрываем модалку корзины
+        document.getElementById('contacts').scrollIntoView({ behavior: 'smooth' }); 
+        document.getElementById('contact-form-container').classList.add('form-highlight-active'); 
+        setTimeout(() => document.getElementById('contact-form-container').classList.remove('form-highlight-active'), 4000); 
+        window.showToast("Запрос сформирован! Введите ваши данные.");
+    };
+
+    window.openQuickView = function(id) {
+        const prod = PRODUCTS.find(p => p.id === id); if (!prod) return;
+        const isImg = prod.image && (prod.image.startsWith('http') || prod.image.startsWith('data:'));
+        const inCart = cart.includes(prod.id);
+        
+        // В QuickView тоже заменяем "Спросить" на "В корзину"
+        document.getElementById('quickview-content').innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start mt-4"><div class="bg-amber-50 rounded-2xl flex items-center justify-center relative h-48 md:h-72">${isImg ? `<img src="${prod.image}" class="object-cover w-full h-full">` : `<span class="text-7xl">${prod.image||'📦'}</span>`}</div><div class="space-y-4 text-left"><div><span class="text-xs font-semibold text-belarus-red">${prod.categoryName}</span><h3 class="font-serif text-2xl font-bold mt-1">${prod.name}</h3></div><div class="text-xl font-bold text-belarus-red">${Number(prod.price).toFixed(2)} BYN</div><div class="text-xs sm:text-sm text-zinc-600 ql-editor" style="padding:0;">${prod.desc || ''}</div><div class="bg-zinc-50 p-3 rounded-xl border text-xs space-y-1"><p><strong>Мастер:</strong> ${prod.master}</p><p><strong>Материал:</strong> ${prod.material}</p></div><button onclick="window.toggleCart(${prod.id}); window.closeQuickView();" class="w-full py-3 ${inCart ? 'bg-amber-500 text-zinc-900' : 'bg-zinc-800 text-white'} font-bold rounded-lg text-sm transition-colors shadow flex justify-center items-center gap-2">${inCart ? '<i class="fa-solid fa-check"></i> Уже в корзине (Удалить)' : '<i class="fa-solid fa-basket-shopping"></i> Добавить в корзину'}</button></div></div>`;
+        document.getElementById('quickview-modal').classList.remove('hidden');
+    };
+    window.closeQuickView = function() { document.getElementById('quickview-modal').classList.add('hidden'); };
+
+    window.requestInquiry = function(id) { const prod = PRODUCTS.find(p => p.id === id); if (!prod) return; document.getElementById('contact-msg').value = `Здравствуйте! Меня интересует: «${prod.name}». Подскажите, есть ли в наличии?`; document.getElementById('contacts').scrollIntoView({ behavior: 'smooth' }); document.getElementById('contact-form-container').classList.add('form-highlight-active'); setTimeout(() => document.getElementById('contact-form-container').classList.remove('form-highlight-active'), 4000); window.showToast("Запрос сформирован!"); };
+    window.requestMasterclass = function(title) { document.getElementById('contact-msg').value = `Здравствуйте! Хочу записаться на мастер-класс: «${title}».`; document.getElementById('contacts').scrollIntoView({ behavior: 'smooth' }); document.getElementById('contact-form-container').classList.add('form-highlight-active'); setTimeout(() => document.getElementById('contact-form-container').classList.remove('form-highlight-active'), 4000); };
+    window.handleContactSubmit = async function(e) { 
+        e.preventDefault(); 
+        const payload = { id: 'inq_' + Date.now(), name: document.getElementById('contact-name').value, phone: document.getElementById('contact-phone').value, message: document.getElementById('contact-msg').value, status: 'new', date: new Date().toLocaleString('ru-RU'), timestamp: Date.now() }; 
+        try { 
+            await set(ref(db, 'inquiries/' + payload.id), payload); 
+            window.showToast("Отправлено!"); 
+            document.getElementById('contact-masters-form').reset(); 
+            // После успешной отправки можно очистить корзину:
+            cart = [];
+            localStorage.setItem('starodorozhski_cart_v1', JSON.stringify(cart));
+            window.updateCartBadge();
+            window.renderProducts();
+        } catch (err) { 
+            window.showToast("Ошибка отправки", "error"); 
+        } 
+    };
+    
+    window.promptMasterPin = function() { document.getElementById('pin-modal').classList.remove('hidden'); };
+    window.closePinModal = function() { document.getElementById('pin-modal').classList.add('hidden'); };
+
+    window.verifyMasterPin = async function() {
+        const e = document.getElementById('master-email-input').value; const p = document.getElementById('master-password-input').value;
+        if (!e || !p) { window.showToast("Заполните поля", "error"); return; }
+        try { 
+            await signInWithEmailAndPassword(auth, e, p); 
+            window.closePinModal(); 
+            document.getElementById('admin-panel-modal').classList.remove('hidden'); 
+            initAdminPlugins();
+            window.showToast("Вход успешен!"); 
+        } catch (err) { window.showToast("Неверный логин!", "error"); }
+    };
+
+    window.closeAdminPanel = function() { document.getElementById('admin-panel-modal').classList.add('hidden'); window.resetAdminForm(); window.resetMcForm(); };
+    window.setAdminTab = function(tab) { ['products','masterclasses','inquiries'].forEach(t => { document.getElementById(`tab-btn-${t}`).className = `flex-1 py-4 text-xs sm:text-sm font-bold border-b-2 ${tab===t?'border-belarus-red text-belarus-red':'border-transparent text-zinc-500 hover:text-zinc-700 transition-all'}`; document.getElementById(`admin-${t}-view`).classList[tab===t?'remove':'add']('hidden'); }); };
+
+    function initAdminPlugins() {
+        if(!quill) { quill = new Quill('#editor-container', { theme: 'snow', placeholder: 'Напишите красивое описание...', modules: { toolbar: [['bold', 'italic'], [{'list':'bullet'}], ['clean']] } }); }
+        const el = document.getElementById('admin-products-list');
+        if(el) {
+            new Sortable(el, {
+                animation: 150, handle: '.fa-grip-vertical', ghostClass: 'sortable-ghost', dragClass: 'sortable-drag',
+                onEnd: async function () {
+                    const items = el.querySelectorAll('.admin-prod-item'); let updates = {};
+                    items.forEach((div, index) => { updates[`products/${div.getAttribute('data-id')}/order`] = index; });
+                    await update(ref(db), updates); window.showToast("Новый порядок сохранен!", "success");
+                }
+            });
+        }
+    }
+
+    window.handleAdminImageUpload = async function(e) {
+        const file = e.target.files[0]; 
+        if(!file) return;
+        
+        const progress = document.getElementById('upload-progress');
+        progress.classList.remove('hidden');
+        progress.innerText = "⏳ Оптимизация фото (сжатие в WebP)...";
+        progress.className = "mt-2 text-xs font-bold text-blue-500 block";
+
+        if(!IMGBB_API_KEY) {
+            progress.innerHTML = "❌ <b>Ключ ImgBB не загружен! Проверьте базу.</b>";
+            progress.className = "mt-2 text-xs font-bold text-red-500 block";
+            return;
+        }
+
+        try {
+            const webpBase64 = await new Promise((resolve, reject) => {
+                const img = new Image();
+                img.src = URL.createObjectURL(file);
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 1200; 
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > MAX_WIDTH) {
+                        height = Math.round((height * MAX_WIDTH) / width);
+                        width = MAX_WIDTH;
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    resolve(canvas.toDataURL('image/webp', 0.8).split(',')[1]); 
+                };
+                img.onerror = () => reject("Ошибка чтения файла");
+            });
+
+            progress.innerText = "⏳ Отправка сжатого фото на сервер...";
+
+            const formData = new FormData();
+            formData.append("image", webpBase64);
+
+            const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await res.json();
+
+            if(data.success === true) {
+                document.getElementById('admin-prod-image-url').value = data.data.url;
+                progress.innerText = "✅ Фото сжато и загружено! Можно сохранять.";
+                progress.className = "mt-2 text-xs font-bold text-green-600 block";
+            } else {
+                progress.innerText = "❌ Ошибка ImgBB: " + (data.error ? data.error.message : "Неизвестно");
+                progress.className = "mt-2 text-xs font-bold text-red-500 block";
+            }
+        } catch(err) {
+            console.error("Сетевая ошибка ImgBB:", err);
+            progress.innerText = "❌ Ошибка сети при сжатии или загрузке.";
+            progress.className = "mt-2 text-xs font-bold text-red-500 block";
+        }
+    };
+
+    window.renderAdminProductsList = function() {
+        const c = document.getElementById('admin-products-list'); if(!c) return; c.innerHTML = '';
+        if(document.getElementById('admin-total-count')) document.getElementById('admin-total-count').innerText = PRODUCTS.length;
+        PRODUCTS.forEach(p => {
+            const isImg = p.image && (p.image.startsWith('http') || p.image.startsWith('data:'));
+            const imgHTML = isImg ? `<img src="${p.image}" class="w-12 h-12 sm:w-14 sm:h-14 object-cover rounded-lg border border-zinc-200 shrink-0 shadow-sm">` : `<div class="w-12 h-12 sm:w-14 sm:h-14 bg-zinc-100 flex items-center justify-center rounded-lg border border-zinc-200 shrink-0 text-2xl">${p.image||'📦'}</div>`;
+            const draftBadge = p.draft ? `<span class="bg-zinc-800 text-white text-[9px] px-2 py-0.5 rounded-md font-bold ml-2 shrink-0">Черновик</span>` : '';
+            
+            c.innerHTML += `<div class="admin-prod-item flex items-center justify-between bg-white border border-zinc-200 ${p.draft ? 'opacity-70' : ''} rounded-xl p-3 sm:p-4 gap-4 shadow-sm hover:shadow-md transition-shadow" data-id="${p.id}"><div class="flex items-center gap-4 min-w-0"><div class="cursor-grab p-2 -ml-2 text-zinc-300 hover:text-belarus-red transition"><i class="fa-solid fa-grip-vertical text-xl"></i></div>${imgHTML}<div class="min-w-0 flex flex-col items-start"><span class="text-[10px] uppercase text-belarus-red font-bold tracking-wider">${p.categoryName}</span><div class="flex items-center max-w-full"><h5 class="font-serif font-bold text-sm sm:text-base text-zinc-900 truncate" title="${p.name}">${p.name}</h5>${draftBadge}</div></div></div><div class="flex items-center gap-3 text-sm border-l border-zinc-100 pl-4 shrink-0"><strong class="text-zinc-800">${Number(p.price || 0).toFixed(2)} BYN</strong><button onclick="window.editProductInAdmin(${p.id})" class="p-2 w-9 h-9 border border-zinc-200 rounded-lg bg-zinc-50 hover:bg-zinc-100 text-zinc-600 transition" title="Редактировать"><i class="fa-solid fa-pen"></i></button><button onclick="window.deleteProductInAdmin(${p.id})" class="p-2 w-9 h-9 border border-zinc-200 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-700 transition" title="Удалить"><i class="fa-solid fa-trash-can"></i></button></div></div>`;
+        });
+    };
+
+    window.renderAdminMasterclassesList = function() {
+        const c = document.getElementById('admin-mc-list'); if(!c) return; c.innerHTML = '';
+        if(document.getElementById('admin-mc-total-count')) document.getElementById('admin-mc-total-count').innerText = MASTERCLASSES.length;
+        MASTERCLASSES.forEach(mc => {
+            const draftBadge = mc.draft ? `<span class="bg-zinc-800 text-white text-[9px] px-2 py-0.5 rounded-md font-bold ml-2 shrink-0">Черновик</span>` : '';
+            c.innerHTML += `<div class="flex items-center justify-between bg-white border border-zinc-200 ${mc.draft ? 'opacity-70' : ''} rounded-xl p-4 gap-4 shadow-sm"><div class="min-w-0 flex flex-col items-start"><span class="text-[10px] uppercase tracking-wider text-belarus-red font-bold">${mc.type}</span><div class="flex items-center max-w-full"><h5 class="font-serif font-bold text-sm sm:text-base text-zinc-900 truncate">${mc.title}</h5>${draftBadge}</div><p class="text-xs text-zinc-500 flex items-center gap-1 mt-1"><i class="fa-regular fa-clock"></i> ${mc.duration}</p></div><div class="flex items-center gap-3 border-l border-zinc-100 pl-4 shrink-0"><button onclick="window.editMcInAdmin('${mc.id}')" class="p-2 w-9 h-9 border border-zinc-200 rounded-lg bg-zinc-50 hover:bg-zinc-100 text-zinc-600 transition"><i class="fa-solid fa-pen"></i></button><button onclick="window.deleteMcInAdmin('${mc.id}')" class="p-2 w-9 h-9 border border-zinc-200 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition"><i class="fa-solid fa-trash-can"></i></button></div></div>`;
+        });
+    };
+
+    window.renderAdminInquiriesList = function() {
+        const c = document.getElementById('admin-inquiries-list'); if(!c) return; c.innerHTML = '';
+        if(document.getElementById('admin-inquiries-total-count')) document.getElementById('admin-inquiries-total-count').innerText = INQUIRIES.length;
+        if (INQUIRIES.length === 0) { c.innerHTML = `<div class="text-center py-12 text-zinc-400"><i class="fa-regular fa-envelope-open text-4xl mb-2"></i><p class="text-sm">Нет входящих сообщений.</p></div>`; return; }
+        INQUIRIES.forEach(inq => {
+            const isNew = inq.status === 'new';
+            const actionBtn = isNew ? `<button onclick="window.toggleInquiryStatus('${inq.databaseId}', '${inq.status}')" class="px-4 py-2 rounded-lg border border-green-200 bg-green-50 hover:bg-green-100 text-green-700 transition text-xs font-bold flex items-center gap-2"><i class="fa-solid fa-check-double text-base"></i> Отметить прочитанным</button>` : `<button onclick="window.toggleInquiryStatus('${inq.databaseId}', '${inq.status}')" class="px-4 py-2 rounded-lg border border-zinc-200 bg-zinc-100 hover:bg-zinc-200 text-zinc-600 transition text-xs font-bold flex items-center gap-2"><i class="fa-solid fa-rotate-left"></i> Вернуть в новые</button>`;
+            c.innerHTML += `<div class="border rounded-xl p-5 ${isNew ? 'bg-red-50/30 border-red-200 shadow-md' : 'bg-white border-zinc-200 opacity-70'} transition-all duration-300 relative">${isNew ? `<span class="absolute top-4 right-4 bg-belarus-red text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Новая заявка</span>` : ''}<div class="mb-3"><h5 class="font-serif font-bold text-lg text-zinc-900">${inq.name}</h5><p class="text-xs text-zinc-500 flex items-center gap-3 mt-1"><span><i class="fa-solid fa-phone text-zinc-400"></i> ${inq.phone}</span><span><i class="fa-regular fa-calendar text-zinc-400"></i> ${inq.date}</span></p></div><div class="bg-white/80 p-4 rounded-xl border border-zinc-200/60 text-sm text-zinc-800 italic leading-relaxed whitespace-pre-wrap shadow-inner mb-4">${inq.message}</div><div class="flex justify-between items-center gap-3 pt-4 border-t border-zinc-100/60">${actionBtn}<button onclick="window.deleteInquiry('${inq.databaseId}')" class="px-4 py-2 rounded-lg text-red-500 hover:bg-red-50 hover:text-red-700 transition text-xs font-bold flex items-center gap-2"><i class="fa-solid fa-trash-can text-sm"></i> Удалить</button></div></div>`;
+        });
+    };
+
+    window.updateInquiriesBadge = function() { const cnt = INQUIRIES.filter(i => i.status === 'new').length; const b = document.getElementById('admin-inquiries-badge'); if (b) { if (cnt > 0) { b.innerText = cnt; b.classList.remove('hidden'); } else b.classList.add('hidden'); } };
+    window.toggleInquiryStatus = async function(id, st) { await set(ref(db, `inquiries/${id}/status`), st === 'new' ? 'completed' : 'new'); window.showToast("Статус успешно обновлен", "success"); };
+    window.deleteInquiry = async function(id) { if(confirm("Точно удалить эту заявку?")) { await remove(ref(db, `inquiries/${id}`)); window.showToast("Удалено", "info"); } };
+    window.clearAllInquiries = async function() { if(confirm("ВНИМАНИЕ! Удалить ВСЕ входящие сообщения?")) { await remove(ref(db, 'inquiries')); window.showToast("Корзина очищена", "info"); } };
+
+    window.handleSaveProduct = async function(e) {
+        e.preventDefault();
+        const idField = document.getElementById('admin-prod-id').value;
+        const category = document.getElementById('admin-prod-category').value;
+        let catName = "🏺 Керамика"; if (category === 'embroidery') catName = "🧵 Ткачество & Вышивка"; if (category === 'souvenirs') catName = "🌾 Сувениры"; if (category === 'clothing') catName = "👗 Одежда"; if (category === 'corporate') catName = "🏢 Корпоративные";
+        const targetId = idField ? parseInt(idField) : Date.now();
+        const isDraft = document.getElementById('admin-prod-draft').checked;
+        
+        const p = { 
+            id: targetId, 
+            name: document.getElementById('admin-prod-name').value, 
+            category: category, 
+            categoryName: catName,
+            price: parseFloat(document.getElementById('admin-prod-price').value), 
+            image: document.getElementById('admin-prod-image-url').value.trim(), 
+            master: document.getElementById('admin-prod-master').value, 
+            material: document.getElementById('admin-prod-material').value, 
+            dimensions: document.getElementById('admin-prod-dims').value, 
+            technique: document.getElementById('admin-prod-technique').value, 
+            desc: quill.root.innerHTML,
+            stock: true, featured: false,
+            draft: isDraft, 
+            order: PRODUCTS.find(x => x.id == targetId)?.order || PRODUCTS.length
+        };
+        await set(ref(db, 'products/' + p.id), p); 
+        window.showToast(isDraft ? "Сохранено как черновик!" : "Товар опубликован!"); 
+        window.resetAdminForm();
+    };
+
+    // НОВОЕ: Сохранение черновика мастеркласса
+    window.handleSaveMasterclass = async function(e) { 
+        e.preventDefault(); 
+        const idField = document.getElementById('admin-mc-id').value; 
+        const isDraft = document.getElementById('admin-mc-draft').checked;
+        
+        const mc = { 
+            id: idField ? idField : 'mc_'+Date.now(), 
+            title: document.getElementById('admin-mc-title').value, 
+            type: document.getElementById('admin-mc-type').value, 
+            duration: document.getElementById('admin-mc-duration').value, 
+            desc: document.getElementById('admin-mc-desc').value,
+            draft: isDraft
+        }; 
+        await set(ref(db, 'masterclasses/' + mc.id), mc); 
+        window.showToast(isDraft ? "Черновик сохранен!" : "Мастер-класс опубликован!"); 
+        window.resetMcForm(); 
+    };
+    
+    window.deleteProductInAdmin = async function(id) { if(confirm("Точно удалить изделие?")) { await remove(ref(db, 'products/' + id)); window.showToast("Удалено"); } };
+    window.deleteMcInAdmin = async function(id) { if(confirm("Точно удалить мастер-класс?")) { await remove(ref(db, 'masterclasses/' + id)); window.showToast("Удалено"); } };
+
+    window.editProductInAdmin = function(id) {
+        const prod = PRODUCTS.find(p => p.id === id); if (!prod) return;
+        document.getElementById('admin-prod-id').value = prod.id; document.getElementById('admin-prod-name').value = prod.name; document.getElementById('admin-prod-category').value = prod.category; document.getElementById('admin-prod-price').value = prod.price; document.getElementById('admin-prod-master').value = prod.master || ''; document.getElementById('admin-prod-material').value = prod.material || ''; document.getElementById('admin-prod-dims').value = prod.dimensions || ''; document.getElementById('admin-prod-technique').value = prod.technique || ''; document.getElementById('admin-prod-image-url').value = prod.image || '';
+        document.getElementById('admin-prod-draft').checked = prod.draft || false;
+        
+        if(quill) quill.root.innerHTML = prod.desc || '';
+        document.getElementById('admin-form-title').innerHTML = `<i class="fa-solid fa-pen text-belarus-red"></i> Редактирование: ${prod.name}`;
+    };
+
+    window.editMcInAdmin = function(id) { 
+        const mc = MASTERCLASSES.find(m => m.id === id); if (!mc) return; 
+        document.getElementById('admin-mc-id').value = mc.id; 
+        document.getElementById('admin-mc-title').value = mc.title; 
+        document.getElementById('admin-mc-type').value = mc.type; 
+        document.getElementById('admin-mc-duration').value = mc.duration; 
+        document.getElementById('admin-mc-desc').value = mc.desc; 
+        document.getElementById('admin-mc-draft').checked = mc.draft || false; // Ставим галочку
+        document.getElementById('admin-mc-form-title').innerHTML = `<i class="fa-solid fa-pen text-belarus-red"></i> Редактировать мастер-класс`; 
+    };
+    
+    window.resetAdminForm = function() { 
+        document.getElementById('admin-prod-id').value = ''; 
+        document.getElementById('admin-prod-name').value = ''; 
+        document.getElementById('admin-prod-price').value = ''; 
+        document.getElementById('admin-prod-image-url').value = ''; 
+        document.getElementById('admin-prod-file').value = ''; 
+        document.getElementById('admin-prod-master').value = ''; 
+        document.getElementById('admin-prod-material').value = ''; 
+        document.getElementById('admin-prod-dims').value = ''; 
+        document.getElementById('admin-prod-technique').value = ''; 
+        document.getElementById('admin-prod-draft').checked = false; 
+        if(quill) quill.root.innerHTML = ''; 
+        document.getElementById('upload-progress').classList.add('hidden'); 
+        document.getElementById('admin-form-title').innerHTML = `<i class="fa-solid fa-circle-plus text-belarus-red"></i> Добавить изделие`; 
+    };
+    
+    window.resetMcForm = function() { 
+        document.getElementById('admin-mc-id').value = ''; 
+        document.getElementById('admin-mc-title').value = ''; 
+        document.getElementById('admin-mc-type').value = ''; 
+        document.getElementById('admin-mc-duration').value = ''; 
+        document.getElementById('admin-mc-desc').value = ''; 
+        document.getElementById('admin-mc-draft').checked = false; 
+        document.getElementById('admin-mc-form-title').innerHTML = `<i class="fa-solid fa-circle-plus text-belarus-red"></i> Добавить занятие`; 
+    };
+
+    window.exportProductsBackup = function() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({products: PRODUCTS, masterclasses: MASTERCLASSES}, null, 2)); const a = document.createElement('a'); a.href = dataStr; a.download = "remesla_backup.json"; document.body.appendChild(a); a.click(); a.remove(); };
+    window.importProductsBackup = function(e) { const file = e.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = async function(ev) { const data = JSON.parse(ev.target.result); if(data.products) for (const item of data.products) await set(ref(db, 'products/' + item.id), item); if(data.masterclasses) for (const item of data.masterclasses) await set(ref(db, 'masterclasses/' + item.id), item); window.showToast("База успешно импортирована!"); }; reader.readAsText(file); };
+
+    function setupInputMask() { const inp = document.getElementById('contact-phone'); if(!inp) return; inp.addEventListener('input', (e) => { let num = e.target.value.replace(/\D/g, ''); if(num.startsWith('375')) num = num.substring(3); let res = '+375 '; if(num.length > 0) res += '(' + num.substring(0,2); if(num.length >= 3) res += ') ' + num.substring(2,5); if(num.length >= 6) res += '-' + num.substring(5,7); if(num.length >= 8) res += '-' + num.substring(7,9); e.target.value = res; }); inp.addEventListener('focus', () => { if(!inp.value) inp.value = '+375 '; }); }
+
+    const CRAFTS_INFO = { 'weaving': { title: "Народное ткачество Стародорожчины", text: "<p class='text-sm text-zinc-600 leading-relaxed mb-3'>Ткачество в нашем регионе имеет глубокие исторические корни. Мастера восстанавливают древние орнаменты, читая по ним судьбу предков. Мы работаем с натуральным льном, используя старинные кросны (ткацкие станки), сохраненные в деревнях нашего района.</p><p class='text-sm text-zinc-600 leading-relaxed'>Каждый рушник и пояс, созданный в Центре, несет в себе сакральный смысл традиционных белорусских символов — солнца, земли и урожая.</p>" }, 'rukhov': { title: "Руховские ковры", text: "<p class='text-sm text-zinc-600 leading-relaxed mb-3'>Это абсолютно уникальное явление для белорусской культуры. Техника родилась в деревне Рухово Стародорожского района. Мастера создают настенные ковры из черной или бордовой ткани, на которую нашивается сложнейшая аппликация из золотистой ржаной соломки.</p><p class='text-sm text-zinc-600 leading-relaxed'>Контраст темного фона и сияющей соломки создает эффект живого света. Эта традиция бережно передается мастерами нашего Центра новому поколению.</p>" } };
+    window.openCraftModal = function(type) { const c = CRAFTS_INFO[type]; if(!c) return; document.getElementById('craft-modal-content').innerHTML = `<h3 class='font-serif text-2xl font-bold mb-4 text-belarus-dark'>${c.title}</h3>${c.text}`; document.getElementById('craft-modal').classList.remove('hidden'); };
+    window.closeCraftModal = function() { document.getElementById('craft-modal').classList.add('hidden'); };
+    window.toggleMobileMenu = function() { document.getElementById('mobile-menu').classList.toggle('hidden'); };
+
+    function initApp() { syncWithFirebaseCloud(); loadLocalStorageData(); setupInputMask(); }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initApp); else initApp();
+
+</script>
+</body>
+</html>
