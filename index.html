@@ -59,6 +59,8 @@
         @keyframes heartBurst { 0% { transform: scale(1); } 40% { transform: scale(1.4); } 70% { transform: scale(0.9); } 100% { transform: scale(1); } }
         .heart-animate i { animation: heartBurst 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     </style>
+    
+<link href="css/bvi.min.css" rel="stylesheet">
 </head>
 <body class="bg-belarus-linen text-zinc-800 font-sans min-h-screen flex flex-col antialiased scroll-smooth">
 
@@ -132,11 +134,13 @@
             </nav>
 
             <div class="flex items-center space-x-2 sm:space-x-3">
+                <a href="#" class="bvi-open relative p-2.5 text-zinc-600 hover:text-belarus-red transition-colors focus:outline-none" title="Версия сайта для слабовидящих">
+                    <i class="fa-solid fa-eye text-xl sm:text-2xl"></i>
+                </a>
                 <button onclick="window.toggleFavoritesModal()" class="relative p-2.5 text-zinc-600 hover:text-belarus-red transition-colors focus:outline-none" aria-label="Избранное (Закладки)">
                     <i class="fa-regular fa-heart text-xl sm:text-2xl"></i>
                     <span id="fav-badge" class="hidden absolute -top-1 -right-1 bg-belarus-red text-white text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center aspect-square border-2 border-white shadow-sm leading-none">0</span>
                 </button>
-                <!-- НОВОЕ: Иконка КОРЗИНЫ -->
                 <button onclick="window.toggleCartModal()" class="relative p-2.5 text-zinc-600 hover:text-belarus-red transition-colors focus:outline-none" aria-label="Корзина запросов">
                     <i class="fa-solid fa-basket-shopping text-xl sm:text-2xl"></i>
                     <span id="cart-badge" class="hidden absolute -top-1 -right-1 bg-amber-500 text-zinc-900 text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center aspect-square border-2 shadow-sm leading-none border-white">0</span>
@@ -545,7 +549,6 @@
     </div>
 </div>
 
-<!-- НОВОЕ: Модальное окно КОРЗИНЫ -->
 <div id="cart-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-0 sm:p-4">
     <div class="bg-white rounded-t-2xl sm:rounded-2xl max-w-lg w-full shadow-2xl relative border border-zinc-200 p-5 sm:p-6 max-h-[85vh] sm:max-h-[80vh] flex flex-col">
         <button onclick="window.toggleCartModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 flex items-center justify-center transition-colors z-10">
@@ -601,7 +604,6 @@
     </div>
 </div>
 
-<!-- БОЛЬШАЯ И УДОБНАЯ ПАНЕЛЬ УПРАВЛЕНИЯ -->
 <div id="admin-panel-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-0 sm:p-4 overflow-y-auto">
     <div class="bg-white rounded-none sm:rounded-2xl w-full max-w-6xl h-full sm:h-[95vh] flex flex-col shadow-2xl relative border border-zinc-200">
         <div class="p-5 sm:p-6 border-b border-zinc-200 flex items-center justify-between bg-zinc-50 rounded-t-2xl shrink-0">
@@ -625,7 +627,6 @@
                 <i class="fa-solid fa-graduation-cap mr-2"></i>Мастер-классы
             </button>
             
-            <!-- ИСПРАВЛЕНИЕ: Выравнивание бейджика 'Входящие заявки' -->
             <button onclick="window.setAdminTab('inquiries')" id="tab-btn-inquiries" class="flex-1 py-4 text-xs sm:text-sm font-bold border-b-2 border-transparent text-zinc-500 hover:text-zinc-700 focus:outline-none transition-all">
                 <span class="flex items-center justify-center gap-2">
                     <i class="fa-solid fa-envelope"></i>Входящие заявки
@@ -634,7 +635,6 @@
             </button>
         </div>
 
-        <!-- ВКЛАДКА: ТОВАРЫ -->
         <div id="admin-products-view" class="flex-grow overflow-y-hidden grid grid-cols-1 lg:grid-cols-12 h-full">
             <form onsubmit="window.handleSaveProduct(event)" class="lg:col-span-4 p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-zinc-200 space-y-4 overflow-y-auto bg-zinc-50/50 custom-scrollbar pb-10">
                 <h4 id="admin-form-title" class="font-serif font-bold text-zinc-800 text-lg border-b border-zinc-200 pb-3 flex items-center gap-2"><i class="fa-solid fa-circle-plus text-belarus-red"></i> Добавить изделие</h4>
@@ -648,7 +648,6 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-prod-category">Категория</label>
-                        <!-- ИСПРАВЛЕНИЕ: Красивый выпадающий список -->
                         <select id="admin-prod-category" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-belarus-red transition-shadow appearance-none cursor-pointer" style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23bd081c%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 1rem top 50%; background-size: 0.65rem auto;">
                             <option value="ceramics">🏺 Керамика</option>
                             <option value="embroidery">🧵 Ткачество</option>
@@ -686,7 +685,6 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-zinc-600 mb-1.5">Описание изделия (Форматированный текст)</label>
-                    <!-- Богатый текстовый редактор Quill -->
                     <div id="editor-container" class="h-40 border border-zinc-200 rounded-xl"></div>
                 </div>
 
@@ -759,7 +757,6 @@
                     <textarea id="admin-mc-desc" required rows="5" class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:outline-none transition-shadow" placeholder="Чему научатся участники на занятии..."></textarea>
                 </div>
 
-                <!-- НОВОЕ: Черновик для мастеркласса -->
                 <div class="space-y-3 border-t border-zinc-200 pt-4">
                     <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-zinc-200 shadow-sm cursor-pointer hover:bg-zinc-50 transition">
                         <input type="checkbox" id="admin-mc-draft" class="w-5 h-5 text-belarus-red bg-zinc-100 border-zinc-300 rounded focus:ring-belarus-red cursor-pointer">
@@ -821,13 +818,12 @@
     let INQUIRIES = [];
     
     let favorites = [];
-    let cart = []; // НОВОЕ: Массив для Корзины
+    let cart = []; 
     
     let currentCategory = 'all';
     let searchQuery = '';
     let currentSort = 'default';
     
-    // Переменные админки
     let IMGBB_API_KEY = null;
     let quill;
 
@@ -840,7 +836,7 @@
         if (type === 'error') toastIcon.innerHTML = '<i class="fa-solid fa-circle-exclamation text-red-500 text-lg"></i>';
         else if (type === 'info') toastIcon.innerHTML = '<i class="fa-solid fa-circle-info text-blue-400 text-lg"></i>';
         else if (type === 'fav') toastIcon.innerHTML = '<i class="fa-solid fa-heart text-belarus-red text-lg"></i>';
-        else if (type === 'cart') toastIcon.innerHTML = '<i class="fa-solid fa-basket-shopping text-amber-500 text-lg"></i>'; // Иконка для корзины
+        else if (type === 'cart') toastIcon.innerHTML = '<i class="fa-solid fa-basket-shopping text-amber-500 text-lg"></i>'; 
         else toastIcon.innerHTML = '<i class="fa-solid fa-circle-check text-green-400 text-lg"></i>';
         
         toast.classList.remove('translate-y-12', 'opacity-0');
@@ -900,7 +896,6 @@
                 const items = []; snapshot.forEach(child => { items.push(child.val()); });
                 PRODUCTS = items.sort((a, b) => (a.order || 0) - (b.order || 0)); 
                 
-                // Очистка удаленных товаров из закладок и корзины
                 favorites = favorites.filter(favId => PRODUCTS.some(p => p.id === favId));
                 cart = cart.filter(cartId => PRODUCTS.some(p => p.id === cartId));
                 
@@ -964,12 +959,11 @@
         
         filtered.forEach(prod => {
             const isFav = favorites.includes(prod.id);
-            const inCart = cart.includes(prod.id); // Проверяем, есть ли в корзине
+            const inCart = cart.includes(prod.id); 
             
             let bgCol = "bg-amber-50"; if(prod.category==='embroidery') bgCol="bg-red-50"; if(prod.category==='ceramics') bgCol="bg-orange-50/80";
             const isImg = prod.image && (prod.image.startsWith('http') || prod.image.startsWith('data:'));
             
-            // ИСПРАВЛЕНИЕ: Кнопка корзины вместо "Спросить"
             grid.innerHTML += `
                 <div class="bg-white rounded-2xl border border-zinc-100 p-4 sm:p-5 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group relative">
                     ${prod.featured ? `<span class="absolute top-3 left-3 bg-belarus-red text-white text-[9px] font-bold px-2 py-0.5 rounded-full z-10">Топ</span>` : ''}
@@ -996,25 +990,20 @@
     window.renderMasterclasses = function() {
         const grid = document.getElementById('masterclasses-grid'); const noMc = document.getElementById('no-masterclasses');
         if(!grid) return; grid.innerHTML = '';
-        
-        // НОВОЕ: Скрываем черновики мастер-классов
         const filteredMc = MASTERCLASSES.filter(mc => !mc.draft);
-        
         if (filteredMc.length === 0) { grid.classList.add('hidden'); if(noMc) noMc.classList.remove('hidden'); return; } else { grid.classList.remove('hidden'); if(noMc) noMc.classList.add('hidden'); }
-        
         filteredMc.forEach(mc => {
             grid.innerHTML += `<div class="bg-zinc-50 rounded-2xl border border-zinc-100 p-5 flex flex-col justify-between hover:shadow-lg transition"><div><span class="text-[11px] font-bold text-amber-600 uppercase tracking-widest mb-2 block">${mc.type}</span><h3 class="font-serif text-lg font-bold text-zinc-900 mb-2">${mc.title}</h3><p class="text-xs text-zinc-500 mb-4">${mc.desc}</p></div><div class="flex items-center justify-between border-t pt-3 mt-2"><span class="text-xs font-semibold text-zinc-600"><i class="fa-regular fa-clock"></i> ${mc.duration}</span><button onclick="window.requestMasterclass('${mc.title}')" class="px-4 py-2 bg-belarus-red hover:bg-red-700 text-white text-xs font-bold rounded-lg">Записаться</button></div></div>`;
         });
     };
 
-    window.setCategory = function(cat) { currentCategory = cat; document.querySelectorAll('.category-btn').forEach(btn => btn.className = "category-btn shrink-0 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-zinc-100 text-zinc-600 hover:bg-zinc-200"); const activeBtn = document.getElementById(`btn-cat-${cat}`); if(activeBtn) { activeBtn.className = "category-btn shrink-0 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-belarus-red text-white shadow-md"; activeBtn.scrollIntoView({behavior:'smooth', inline:'center'}); } window.renderProducts(); };
+    window.setCategory = function(cat) { currentCategory = cat; document.querySelectorAll('.category-btn').forEach(btn => btn.className = "category-btn shrink-0 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 bg-zinc-100 text-zinc-600 hover:bg-zinc-200"); const activeBtn = document.getElementById(`btn-cat-${cat}`); if(activeBtn) { activeBtn.className = "category-btn shrink-0 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 bg-belarus-red text-white shadow-md shadow-belarus-red/20"; activeBtn.scrollIntoView({behavior:'smooth', inline:'center'}); } window.renderProducts(); };
     window.applyFilters = function() { searchQuery = document.getElementById('search-input').value; window.renderProducts(); };
     window.resetFilters = function() { document.getElementById('search-input').value = ''; window.selectSortOption('default','По умолчанию'); searchQuery = ''; window.setCategory('all'); };
     window.toggleSortDropdown = function(e) { e.stopPropagation(); document.getElementById('sort-dropdown-options').classList.toggle('hidden'); document.getElementById('sort-dropdown-arrow').classList.toggle('rotate-180'); };
     window.selectSortOption = function(val, label) { currentSort = val; document.getElementById('sort-dropdown-label').innerText = label; document.getElementById('sort-dropdown-options').classList.add('hidden'); document.getElementById('sort-dropdown-arrow').classList.remove('rotate-180'); window.applyFilters(); };
     document.addEventListener('click', (e) => { const drop = document.getElementById('custom-sort-dropdown'); if (drop && !drop.contains(e.target)) { document.getElementById('sort-dropdown-options')?.classList.add('hidden'); document.getElementById('sort-dropdown-arrow')?.classList.remove('rotate-180'); } });
     
-    // ЛОГИКА ИЗБРАННОГО
     window.toggleFavorite = function(id, btnElement) { 
         const idx = favorites.indexOf(id); 
         if (btnElement) {
@@ -1034,20 +1023,15 @@
     window.toggleFavoritesModal = function() { document.getElementById('favorites-modal').classList.toggle('hidden'); window.renderFavoritesList(); };
     window.renderFavoritesList = function() { const list = document.getElementById('favorites-list'); if (!list) return; list.innerHTML = ''; if (favorites.length === 0) { list.innerHTML = `<div class="text-center py-10 text-zinc-400">Список пуст.</div>`; return; } favorites.forEach(id => { const prod = PRODUCTS.find(p => p.id === id); if (!prod) return; const isImg = prod.image && (prod.image.startsWith('http') || prod.image.startsWith('data:')); list.innerHTML += `<div class="flex items-center justify-between bg-zinc-50 p-3 rounded-xl border gap-3"><div class="flex items-center gap-3"><div class="w-10 h-10 flex items-center justify-center bg-white rounded border">${isImg?`<img src="${prod.image}" class="w-full h-full object-cover">`:`<span>${prod.image}</span>`}</div><div><h4 class="text-xs font-bold truncate">${prod.name}</h4><span class="text-xs text-belarus-red">${Number(prod.price).toFixed(2)} BYN</span></div></div><div class="flex gap-1"><button onclick="window.requestInquiry(${prod.id}); window.toggleFavoritesModal();" class="p-2 text-zinc-600" title="Спросить"><i class="fa-solid fa-comment-dots"></i></button><button onclick="window.toggleFavorite(${prod.id})" class="p-2 text-zinc-400" title="Удалить"><i class="fa-solid fa-trash-can"></i></button></div></div>`; }); };
 
-    // НОВОЕ: ЛОГИКА КОРЗИНЫ
     window.toggleCart = function(id) {
         const idx = cart.indexOf(id);
         if (idx === -1) { 
-            cart.push(id); 
-            window.showToast("Добавлено в корзину", 'cart'); 
+            cart.push(id); window.showToast("Добавлено в корзину", 'cart'); 
         } else { 
-            cart.splice(idx, 1); 
-            window.showToast("Удалено из корзины", 'info'); 
+            cart.splice(idx, 1); window.showToast("Удалено из корзины", 'info'); 
         }
         localStorage.setItem('starodorozhski_cart_v1', JSON.stringify(cart));
-        window.updateCartBadge();
-        window.renderProducts(); // Обновляем кнопки в каталоге
-        window.renderCartList(); // Обновляем список, если модалка открыта
+        window.updateCartBadge(); window.renderProducts(); window.renderCartList(); 
     };
     window.updateCartBadge = function() { const badge = document.getElementById('cart-badge'); if (badge) { if (cart.length > 0) { badge.innerText = cart.length; badge.classList.remove('hidden'); } else badge.classList.add('hidden'); } };
     window.toggleCartModal = function() { document.getElementById('cart-modal').classList.toggle('hidden'); window.renderCartList(); };
@@ -1055,59 +1039,31 @@
         const list = document.getElementById('cart-list'); 
         const footer = document.getElementById('cart-footer');
         const totalEl = document.getElementById('cart-total');
-        if (!list) return; 
-        list.innerHTML = ''; 
-        
+        if (!list) return; list.innerHTML = ''; 
         if (cart.length === 0) { 
             list.innerHTML = `<div class="text-center py-10 text-zinc-400"><i class="fa-solid fa-basket-shopping text-4xl mb-3 opacity-20 block"></i>Корзина пуста.</div>`; 
-            footer.classList.add('hidden');
-            return; 
+            footer.classList.add('hidden'); return; 
         } 
-        
-        let totalSum = 0;
-        footer.classList.remove('hidden');
-        
+        let totalSum = 0; footer.classList.remove('hidden');
         cart.forEach(id => { 
-            const prod = PRODUCTS.find(p => p.id === id); 
-            if (!prod) return; 
+            const prod = PRODUCTS.find(p => p.id === id); if (!prod) return; 
             totalSum += Number(prod.price || 0);
-            
             const isImg = prod.image && (prod.image.startsWith('http') || prod.image.startsWith('data:')); 
-            list.innerHTML += `
-                <div class="flex items-center justify-between bg-zinc-50 p-3 rounded-xl border gap-3">
-                    <div class="flex items-center gap-3 min-w-0">
-                        <div class="w-12 h-12 flex items-center justify-center bg-white rounded border shrink-0">${isImg?`<img src="${prod.image}" class="w-full h-full object-cover rounded">`:`<span class="text-xl">${prod.image}</span>`}</div>
-                        <div class="min-w-0">
-                            <h4 class="text-xs font-bold text-zinc-800 truncate">${prod.name}</h4>
-                            <span class="text-xs text-belarus-red font-bold">${Number(prod.price).toFixed(2)} BYN</span>
-                        </div>
-                    </div>
-                    <button onclick="window.toggleCart(${prod.id})" class="p-2 text-zinc-400 hover:text-red-500 transition shrink-0" title="Удалить"><i class="fa-solid fa-xmark text-lg"></i></button>
-                </div>`; 
+            list.innerHTML += `<div class="flex items-center justify-between bg-zinc-50 p-3 rounded-xl border gap-3"><div class="flex items-center gap-3 min-w-0"><div class="w-12 h-12 flex items-center justify-center bg-white rounded border shrink-0">${isImg?`<img src="${prod.image}" class="w-full h-full object-cover rounded">`:`<span class="text-xl">${prod.image}</span>`}</div><div class="min-w-0"><h4 class="text-xs font-bold text-zinc-800 truncate">${prod.name}</h4><span class="text-xs text-belarus-red font-bold">${Number(prod.price).toFixed(2)} BYN</span></div></div><button onclick="window.toggleCart(${prod.id})" class="p-2 text-zinc-400 hover:text-red-500 transition shrink-0" title="Удалить"><i class="fa-solid fa-xmark text-lg"></i></button></div>`; 
         }); 
-        
         totalEl.innerText = totalSum.toFixed(2) + ' BYN';
     };
 
-    // НОВОЕ: Оформление корзины
     window.checkoutCart = function() {
         if (cart.length === 0) return;
-        
-        let msg = "Здравствуйте! Я хочу оформить заказ на следующие изделия:\n\n";
-        let sum = 0;
-        
+        let msg = "Здравствуйте! Я хочу оформить заказ на следующие изделия:\n\n"; let sum = 0;
         cart.forEach((id, index) => {
             const prod = PRODUCTS.find(p => p.id === id);
-            if(prod) {
-                msg += `${index + 1}. ${prod.name} — ${Number(prod.price).toFixed(2)} BYN\n`;
-                sum += Number(prod.price);
-            }
+            if(prod) { msg += `${index + 1}. ${prod.name} — ${Number(prod.price).toFixed(2)} BYN\n`; sum += Number(prod.price); }
         });
-        
         msg += `\nИтого ориентировочно: ${sum.toFixed(2)} BYN.\nСвяжитесь со мной, пожалуйста.`;
-        
         document.getElementById('contact-msg').value = msg; 
-        window.toggleCartModal(); // Закрываем модалку корзины
+        window.toggleCartModal(); 
         document.getElementById('contacts').scrollIntoView({ behavior: 'smooth' }); 
         document.getElementById('contact-form-container').classList.add('form-highlight-active'); 
         setTimeout(() => document.getElementById('contact-form-container').classList.remove('form-highlight-active'), 4000); 
@@ -1118,8 +1074,6 @@
         const prod = PRODUCTS.find(p => p.id === id); if (!prod) return;
         const isImg = prod.image && (prod.image.startsWith('http') || prod.image.startsWith('data:'));
         const inCart = cart.includes(prod.id);
-        
-        // В QuickView тоже заменяем "Спросить" на "В корзину"
         document.getElementById('quickview-content').innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start mt-4"><div class="bg-amber-50 rounded-2xl flex items-center justify-center relative h-48 md:h-72">${isImg ? `<img src="${prod.image}" class="object-cover w-full h-full">` : `<span class="text-7xl">${prod.image||'📦'}</span>`}</div><div class="space-y-4 text-left"><div><span class="text-xs font-semibold text-belarus-red">${prod.categoryName}</span><h3 class="font-serif text-2xl font-bold mt-1">${prod.name}</h3></div><div class="text-xl font-bold text-belarus-red">${Number(prod.price).toFixed(2)} BYN</div><div class="text-xs sm:text-sm text-zinc-600 ql-editor" style="padding:0;">${prod.desc || ''}</div><div class="bg-zinc-50 p-3 rounded-xl border text-xs space-y-1"><p><strong>Мастер:</strong> ${prod.master}</p><p><strong>Материал:</strong> ${prod.material}</p></div><button onclick="window.toggleCart(${prod.id}); window.closeQuickView();" class="w-full py-3 ${inCart ? 'bg-amber-500 text-zinc-900' : 'bg-zinc-800 text-white'} font-bold rounded-lg text-sm transition-colors shadow flex justify-center items-center gap-2">${inCart ? '<i class="fa-solid fa-check"></i> Уже в корзине (Удалить)' : '<i class="fa-solid fa-basket-shopping"></i> Добавить в корзину'}</button></div></div>`;
         document.getElementById('quickview-modal').classList.remove('hidden');
     };
@@ -1134,14 +1088,8 @@
             await set(ref(db, 'inquiries/' + payload.id), payload); 
             window.showToast("Отправлено!"); 
             document.getElementById('contact-masters-form').reset(); 
-            // После успешной отправки можно очистить корзину:
-            cart = [];
-            localStorage.setItem('starodorozhski_cart_v1', JSON.stringify(cart));
-            window.updateCartBadge();
-            window.renderProducts();
-        } catch (err) { 
-            window.showToast("Ошибка отправки", "error"); 
-        } 
+            cart = []; localStorage.setItem('starodorozhski_cart_v1', JSON.stringify(cart)); window.updateCartBadge(); window.renderProducts();
+        } catch (err) { window.showToast("Ошибка отправки", "error"); } 
     };
     
     window.promptMasterPin = function() { document.getElementById('pin-modal').classList.remove('hidden'); };
@@ -1152,10 +1100,8 @@
         if (!e || !p) { window.showToast("Заполните поля", "error"); return; }
         try { 
             await signInWithEmailAndPassword(auth, e, p); 
-            window.closePinModal(); 
-            document.getElementById('admin-panel-modal').classList.remove('hidden'); 
-            initAdminPlugins();
-            window.showToast("Вход успешен!"); 
+            window.closePinModal(); document.getElementById('admin-panel-modal').classList.remove('hidden'); 
+            initAdminPlugins(); window.showToast("Вход успешен!"); 
         } catch (err) { window.showToast("Неверный логин!", "error"); }
     };
 
@@ -1178,69 +1124,28 @@
     }
 
     window.handleAdminImageUpload = async function(e) {
-        const file = e.target.files[0]; 
-        if(!file) return;
-        
+        const file = e.target.files[0]; if(!file) return;
         const progress = document.getElementById('upload-progress');
-        progress.classList.remove('hidden');
-        progress.innerText = "⏳ Оптимизация фото (сжатие в WebP)...";
-        progress.className = "mt-2 text-xs font-bold text-blue-500 block";
-
-        if(!IMGBB_API_KEY) {
-            progress.innerHTML = "❌ <b>Ключ ImgBB не загружен! Проверьте базу.</b>";
-            progress.className = "mt-2 text-xs font-bold text-red-500 block";
-            return;
-        }
-
+        progress.classList.remove('hidden'); progress.innerText = "⏳ Оптимизация фото..."; progress.className = "mt-2 text-xs font-bold text-blue-500 block";
+        if(!IMGBB_API_KEY) { progress.innerHTML = "❌ <b>Ключ ImgBB не загружен! Проверьте базу.</b>"; progress.className = "mt-2 text-xs font-bold text-red-500 block"; return; }
         try {
             const webpBase64 = await new Promise((resolve, reject) => {
-                const img = new Image();
-                img.src = URL.createObjectURL(file);
+                const img = new Image(); img.src = URL.createObjectURL(file);
                 img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 1200; 
-                    let width = img.width;
-                    let height = img.height;
-
-                    if (width > MAX_WIDTH) {
-                        height = Math.round((height * MAX_WIDTH) / width);
-                        width = MAX_WIDTH;
-                    }
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    
-                    resolve(canvas.toDataURL('image/webp', 0.8).split(',')[1]); 
-                };
-                img.onerror = () => reject("Ошибка чтения файла");
+                    const canvas = document.createElement('canvas'); const MAX_WIDTH = 1200; 
+                    let width = img.width; let height = img.height;
+                    if (width > MAX_WIDTH) { height = Math.round((height * MAX_WIDTH) / width); width = MAX_WIDTH; }
+                    canvas.width = width; canvas.height = height; const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height); resolve(canvas.toDataURL('image/webp', 0.8).split(',')[1]); 
+                }; img.onerror = () => reject("Ошибка");
             });
-
-            progress.innerText = "⏳ Отправка сжатого фото на сервер...";
-
-            const formData = new FormData();
-            formData.append("image", webpBase64);
-
-            const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-                method: 'POST',
-                body: formData
-            });
-            
+            progress.innerText = "⏳ Отправка фото...";
+            const formData = new FormData(); formData.append("image", webpBase64);
+            const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
             const data = await res.json();
-
-            if(data.success === true) {
-                document.getElementById('admin-prod-image-url').value = data.data.url;
-                progress.innerText = "✅ Фото сжато и загружено! Можно сохранять.";
-                progress.className = "mt-2 text-xs font-bold text-green-600 block";
-            } else {
-                progress.innerText = "❌ Ошибка ImgBB: " + (data.error ? data.error.message : "Неизвестно");
-                progress.className = "mt-2 text-xs font-bold text-red-500 block";
-            }
-        } catch(err) {
-            console.error("Сетевая ошибка ImgBB:", err);
-            progress.innerText = "❌ Ошибка сети при сжатии или загрузке.";
-            progress.className = "mt-2 text-xs font-bold text-red-500 block";
-        }
+            if(data.success === true) { document.getElementById('admin-prod-image-url').value = data.data.url; progress.innerText = "✅ Загружено!"; progress.className = "mt-2 text-xs font-bold text-green-600 block"; } 
+            else { progress.innerText = "❌ Ошибка: " + (data.error ? data.error.message : "Неизвестно"); progress.className = "mt-2 text-xs font-bold text-red-500 block"; }
+        } catch(err) { progress.innerText = "❌ Ошибка сети"; progress.className = "mt-2 text-xs font-bold text-red-500 block"; }
     };
 
     window.renderAdminProductsList = function() {
@@ -1250,7 +1155,6 @@
             const isImg = p.image && (p.image.startsWith('http') || p.image.startsWith('data:'));
             const imgHTML = isImg ? `<img src="${p.image}" class="w-12 h-12 sm:w-14 sm:h-14 object-cover rounded-lg border border-zinc-200 shrink-0 shadow-sm">` : `<div class="w-12 h-12 sm:w-14 sm:h-14 bg-zinc-100 flex items-center justify-center rounded-lg border border-zinc-200 shrink-0 text-2xl">${p.image||'📦'}</div>`;
             const draftBadge = p.draft ? `<span class="bg-zinc-800 text-white text-[9px] px-2 py-0.5 rounded-md font-bold ml-2 shrink-0">Черновик</span>` : '';
-            
             c.innerHTML += `<div class="admin-prod-item flex items-center justify-between bg-white border border-zinc-200 ${p.draft ? 'opacity-70' : ''} rounded-xl p-3 sm:p-4 gap-4 shadow-sm hover:shadow-md transition-shadow" data-id="${p.id}"><div class="flex items-center gap-4 min-w-0"><div class="cursor-grab p-2 -ml-2 text-zinc-300 hover:text-belarus-red transition"><i class="fa-solid fa-grip-vertical text-xl"></i></div>${imgHTML}<div class="min-w-0 flex flex-col items-start"><span class="text-[10px] uppercase text-belarus-red font-bold tracking-wider">${p.categoryName}</span><div class="flex items-center max-w-full"><h5 class="font-serif font-bold text-sm sm:text-base text-zinc-900 truncate" title="${p.name}">${p.name}</h5>${draftBadge}</div></div></div><div class="flex items-center gap-3 text-sm border-l border-zinc-100 pl-4 shrink-0"><strong class="text-zinc-800">${Number(p.price || 0).toFixed(2)} BYN</strong><button onclick="window.editProductInAdmin(${p.id})" class="p-2 w-9 h-9 border border-zinc-200 rounded-lg bg-zinc-50 hover:bg-zinc-100 text-zinc-600 transition" title="Редактировать"><i class="fa-solid fa-pen"></i></button><button onclick="window.deleteProductInAdmin(${p.id})" class="p-2 w-9 h-9 border border-zinc-200 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-700 transition" title="Удалить"><i class="fa-solid fa-trash-can"></i></button></div></div>`;
         });
     };
@@ -1289,43 +1193,20 @@
         const isDraft = document.getElementById('admin-prod-draft').checked;
         
         const p = { 
-            id: targetId, 
-            name: document.getElementById('admin-prod-name').value, 
-            category: category, 
-            categoryName: catName,
-            price: parseFloat(document.getElementById('admin-prod-price').value), 
-            image: document.getElementById('admin-prod-image-url').value.trim(), 
-            master: document.getElementById('admin-prod-master').value, 
-            material: document.getElementById('admin-prod-material').value, 
-            dimensions: document.getElementById('admin-prod-dims').value, 
-            technique: document.getElementById('admin-prod-technique').value, 
-            desc: quill.root.innerHTML,
-            stock: true, featured: false,
-            draft: isDraft, 
-            order: PRODUCTS.find(x => x.id == targetId)?.order || PRODUCTS.length
+            id: targetId, name: document.getElementById('admin-prod-name').value, category: category, categoryName: catName,
+            price: parseFloat(document.getElementById('admin-prod-price').value), image: document.getElementById('admin-prod-image-url').value.trim(), 
+            master: document.getElementById('admin-prod-master').value, material: document.getElementById('admin-prod-material').value, 
+            dimensions: document.getElementById('admin-prod-dims').value, technique: document.getElementById('admin-prod-technique').value, 
+            desc: quill.root.innerHTML, stock: true, featured: false, draft: isDraft, order: PRODUCTS.find(x => x.id == targetId)?.order || PRODUCTS.length
         };
-        await set(ref(db, 'products/' + p.id), p); 
-        window.showToast(isDraft ? "Сохранено как черновик!" : "Товар опубликован!"); 
-        window.resetAdminForm();
+        await set(ref(db, 'products/' + p.id), p); window.showToast(isDraft ? "Сохранено как черновик!" : "Товар опубликован!"); window.resetAdminForm();
     };
 
-    // НОВОЕ: Сохранение черновика мастеркласса
     window.handleSaveMasterclass = async function(e) { 
         e.preventDefault(); 
-        const idField = document.getElementById('admin-mc-id').value; 
-        const isDraft = document.getElementById('admin-mc-draft').checked;
-        
-        const mc = { 
-            id: idField ? idField : 'mc_'+Date.now(), 
-            title: document.getElementById('admin-mc-title').value, 
-            type: document.getElementById('admin-mc-type').value, 
-            duration: document.getElementById('admin-mc-duration').value, 
-            desc: document.getElementById('admin-mc-desc').value,
-            draft: isDraft
-        }; 
-        await set(ref(db, 'masterclasses/' + mc.id), mc); 
-        window.showToast(isDraft ? "Черновик сохранен!" : "Мастер-класс опубликован!"); 
-        window.resetMcForm(); 
+        const idField = document.getElementById('admin-mc-id').value; const isDraft = document.getElementById('admin-mc-draft').checked;
+        const mc = { id: idField ? idField : 'mc_'+Date.now(), title: document.getElementById('admin-mc-title').value, type: document.getElementById('admin-mc-type').value, duration: document.getElementById('admin-mc-duration').value, desc: document.getElementById('admin-mc-desc').value, draft: isDraft }; 
+        await set(ref(db, 'masterclasses/' + mc.id), mc); window.showToast(isDraft ? "Черновик сохранен!" : "Мастер-класс опубликован!"); window.resetMcForm(); 
     };
     
     window.deleteProductInAdmin = async function(id) { if(confirm("Точно удалить изделие?")) { await remove(ref(db, 'products/' + id)); window.showToast("Удалено"); } };
@@ -1335,50 +1216,26 @@
         const prod = PRODUCTS.find(p => p.id === id); if (!prod) return;
         document.getElementById('admin-prod-id').value = prod.id; document.getElementById('admin-prod-name').value = prod.name; document.getElementById('admin-prod-category').value = prod.category; document.getElementById('admin-prod-price').value = prod.price; document.getElementById('admin-prod-master').value = prod.master || ''; document.getElementById('admin-prod-material').value = prod.material || ''; document.getElementById('admin-prod-dims').value = prod.dimensions || ''; document.getElementById('admin-prod-technique').value = prod.technique || ''; document.getElementById('admin-prod-image-url').value = prod.image || '';
         document.getElementById('admin-prod-draft').checked = prod.draft || false;
-        
         if(quill) quill.root.innerHTML = prod.desc || '';
         document.getElementById('admin-form-title').innerHTML = `<i class="fa-solid fa-pen text-belarus-red"></i> Редактирование: ${prod.name}`;
     };
 
     window.editMcInAdmin = function(id) { 
         const mc = MASTERCLASSES.find(m => m.id === id); if (!mc) return; 
-        document.getElementById('admin-mc-id').value = mc.id; 
-        document.getElementById('admin-mc-title').value = mc.title; 
-        document.getElementById('admin-mc-type').value = mc.type; 
-        document.getElementById('admin-mc-duration').value = mc.duration; 
-        document.getElementById('admin-mc-desc').value = mc.desc; 
-        document.getElementById('admin-mc-draft').checked = mc.draft || false; // Ставим галочку
+        document.getElementById('admin-mc-id').value = mc.id; document.getElementById('admin-mc-title').value = mc.title; document.getElementById('admin-mc-type').value = mc.type; document.getElementById('admin-mc-duration').value = mc.duration; document.getElementById('admin-mc-desc').value = mc.desc; document.getElementById('admin-mc-draft').checked = mc.draft || false;
         document.getElementById('admin-mc-form-title').innerHTML = `<i class="fa-solid fa-pen text-belarus-red"></i> Редактировать мастер-класс`; 
     };
     
     window.resetAdminForm = function() { 
-        document.getElementById('admin-prod-id').value = ''; 
-        document.getElementById('admin-prod-name').value = ''; 
-        document.getElementById('admin-prod-price').value = ''; 
-        document.getElementById('admin-prod-image-url').value = ''; 
-        document.getElementById('admin-prod-file').value = ''; 
-        document.getElementById('admin-prod-master').value = ''; 
-        document.getElementById('admin-prod-material').value = ''; 
-        document.getElementById('admin-prod-dims').value = ''; 
-        document.getElementById('admin-prod-technique').value = ''; 
-        document.getElementById('admin-prod-draft').checked = false; 
+        document.getElementById('admin-prod-id').value = ''; document.getElementById('admin-prod-name').value = ''; document.getElementById('admin-prod-category').value = 'ceramics'; document.getElementById('admin-prod-price').value = ''; document.getElementById('admin-prod-image-url').value = ''; document.getElementById('admin-prod-file').value = ''; document.getElementById('admin-prod-master').value = ''; document.getElementById('admin-prod-material').value = ''; document.getElementById('admin-prod-dims').value = ''; document.getElementById('admin-prod-technique').value = ''; document.getElementById('admin-prod-draft').checked = false; 
         if(quill) quill.root.innerHTML = ''; 
-        document.getElementById('upload-progress').classList.add('hidden'); 
-        document.getElementById('admin-form-title').innerHTML = `<i class="fa-solid fa-circle-plus text-belarus-red"></i> Добавить изделие`; 
+        document.getElementById('upload-progress').classList.add('hidden'); document.getElementById('admin-form-title').innerHTML = `<i class="fa-solid fa-circle-plus text-belarus-red"></i> Добавить изделие`; 
     };
     
     window.resetMcForm = function() { 
-        document.getElementById('admin-mc-id').value = ''; 
-        document.getElementById('admin-mc-title').value = ''; 
-        document.getElementById('admin-mc-type').value = ''; 
-        document.getElementById('admin-mc-duration').value = ''; 
-        document.getElementById('admin-mc-desc').value = ''; 
-        document.getElementById('admin-mc-draft').checked = false; 
+        document.getElementById('admin-mc-id').value = ''; document.getElementById('admin-mc-title').value = ''; document.getElementById('admin-mc-type').value = ''; document.getElementById('admin-mc-duration').value = ''; document.getElementById('admin-mc-desc').value = ''; document.getElementById('admin-mc-draft').checked = false; 
         document.getElementById('admin-mc-form-title').innerHTML = `<i class="fa-solid fa-circle-plus text-belarus-red"></i> Добавить занятие`; 
     };
-
-    window.exportProductsBackup = function() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({products: PRODUCTS, masterclasses: MASTERCLASSES}, null, 2)); const a = document.createElement('a'); a.href = dataStr; a.download = "remesla_backup.json"; document.body.appendChild(a); a.click(); a.remove(); };
-    window.importProductsBackup = function(e) { const file = e.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = async function(ev) { const data = JSON.parse(ev.target.result); if(data.products) for (const item of data.products) await set(ref(db, 'products/' + item.id), item); if(data.masterclasses) for (const item of data.masterclasses) await set(ref(db, 'masterclasses/' + item.id), item); window.showToast("База успешно импортирована!"); }; reader.readAsText(file); };
 
     function setupInputMask() { const inp = document.getElementById('contact-phone'); if(!inp) return; inp.addEventListener('input', (e) => { let num = e.target.value.replace(/\D/g, ''); if(num.startsWith('375')) num = num.substring(3); let res = '+375 '; if(num.length > 0) res += '(' + num.substring(0,2); if(num.length >= 3) res += ') ' + num.substring(2,5); if(num.length >= 6) res += '-' + num.substring(5,7); if(num.length >= 8) res += '-' + num.substring(7,9); e.target.value = res; }); inp.addEventListener('focus', () => { if(!inp.value) inp.value = '+375 '; }); }
 
@@ -1391,5 +1248,7 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initApp); else initApp();
 
 </script>
+<script src="js/bvi.min.js"></script>
+<script type="text/javascript">new isvek.Bvi();</script>
 </body>
 </html>
