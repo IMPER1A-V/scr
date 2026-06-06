@@ -1,13 +1,3 @@
-Это классическая проблема с виджетом Google Переводчика. Происходит две вещи:
-
-1. Если скрыть Гугл через `display: none;`, его внутренние скрипты думают, что виджета нет на странице, и он вообще **не загружает** список языков (поэтому скрипт не может его найти).
-2. Гуглу обязательно нужен параметр `{ bubbles: true }` при имитации клика, иначе он игнорирует переключение.
-
-Я исправил CSS (сделал виджет "невидимым", но физически существующим на странице) и усилил функцию переключения. Теперь переводится **мгновенно и без перезагрузки**, а выбранный язык запоминается (через cookies).
-
-Вот полностью исправленный и проверенный код (просто замените весь ваш файл):
-
-```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -68,14 +58,6 @@
         .sortable-drag { cursor: grabbing !important; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         @keyframes heartBurst { 0% { transform: scale(1); } 40% { transform: scale(1.4); } 70% { transform: scale(0.9); } 100% { transform: scale(1); } }
         .heart-animate i { animation: heartBurst 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-
-        /* ИСПРАВЛЕНО: Скрываем виджет так, чтобы его скрипты продолжали работать */
-        .goog-te-banner-frame.skiptranslate { display: none !important; }
-        body { top: 0px !important; }
-        #google_translate_element { width: 0; height: 0; overflow: hidden; opacity: 0; position: absolute; z-index: -1; }
-        .goog-tooltip { display: none !important; }
-        .goog-tooltip:hover { display: none !important; }
-        .goog-text-highlight { background-color: transparent !important; border: none !important; box-shadow: none !important; }
     </style>
     
 <link href="css/bvi.min.css" rel="stylesheet">
@@ -152,20 +134,6 @@
             </nav>
 
             <div class="flex items-center space-x-2 sm:space-x-3">
-                
-                <!-- ВЫПАДАЮЩЕЕ МЕНЮ ЯЗЫКОВ -->
-                <div class="relative group" id="lang-dropdown-wrapper">
-                    <button class="p-2.5 text-zinc-600 hover:text-belarus-red transition-colors focus:outline-none flex items-center gap-1 font-bold text-sm" title="Сменить язык">
-                        <i class="fa-solid fa-globe text-xl sm:text-2xl"></i>
-                        <span id="current-lang-label" class="hidden sm:inline">RU</span>
-                    </button>
-                    <div class="absolute hidden group-hover:block top-full right-0 bg-white shadow-xl border border-zinc-100 rounded-xl py-2 z-50 w-36">
-                        <button onclick="window.changeLanguage('ru', 'RU')" class="w-full text-left px-4 py-2 text-sm hover:bg-zinc-50 hover:text-belarus-red transition">🇷🇺 Русский</button>
-                        <button onclick="window.changeLanguage('be', 'BY')" class="w-full text-left px-4 py-2 text-sm hover:bg-zinc-50 hover:text-belarus-red transition">🇧🇾 Беларуская</button>
-                        <button onclick="window.changeLanguage('en', 'EN')" class="w-full text-left px-4 py-2 text-sm hover:bg-zinc-50 hover:text-belarus-red transition">🇬🇧 English</button>
-                    </div>
-                </div>
-
                 <a href="#" class="bvi-open relative p-2.5 text-zinc-600 hover:text-belarus-red transition-colors focus:outline-none" title="Версия сайта для слабовидящих">
                     <i class="fa-solid fa-eye text-xl sm:text-2xl"></i>
                 </a>
@@ -336,6 +304,7 @@
         </div>
     </div>
 
+    <!-- Сетка продуктов -->
     <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 min-h-[300px]">
         <!-- Скелетоны генерируются через JS -->
     </div>
@@ -673,7 +642,7 @@
                 
                 <div>
                     <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-prod-name">Название сувенира</label>
-                    <input type="text" id="admin-prod-name" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:outline-none transition-shadow">
+                    <input type="text" id="admin-prod-name" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:border-belarus-red focus:outline-none transition-shadow">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
@@ -689,29 +658,29 @@
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-prod-price">Цена (BYN)</label>
-                        <input type="number" id="admin-prod-price" required step="0.01" min="0" class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:outline-none transition-shadow">
+                        <input type="number" id="admin-prod-price" required step="0.01" min="0" class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:border-belarus-red focus:outline-none transition-shadow">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-prod-master">ФИО мастера Центра</label>
-                    <input type="text" id="admin-prod-master" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:outline-none transition-shadow" placeholder="Например: Дмитрий Алексеевич Вечер">
+                    <input type="text" id="admin-prod-master" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:border-belarus-red focus:outline-none transition-shadow" placeholder="Например: Дмитрий Алексеевич Вечер">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-prod-material">Материалы</label>
-                        <input type="text" id="admin-prod-material" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:outline-none transition-shadow" placeholder="Лён, глина, рожь">
+                        <input type="text" id="admin-prod-material" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:border-belarus-red focus:outline-none transition-shadow" placeholder="Лён, глина, рожь">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-prod-dims">Размеры / Объем</label>
-                        <input type="text" id="admin-prod-dims" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:outline-none transition-shadow" placeholder="30 см х 30 см">
+                        <input type="text" id="admin-prod-dims" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:border-belarus-red focus:outline-none transition-shadow" placeholder="30 см х 30 см">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-zinc-600 mb-1.5" for="admin-prod-technique">Техника изготовления</label>
-                    <input type="text" id="admin-prod-technique" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:outline-none transition-shadow" placeholder="Молочение, вышивка крестом">
+                    <input type="text" id="admin-prod-technique" required class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-belarus-red focus:border-belarus-red focus:outline-none transition-shadow" placeholder="Молочение, вышивка крестом">
                 </div>
 
                 <div>
@@ -729,7 +698,7 @@
                         </div>
                         <div class="bg-white p-3 rounded-xl border border-zinc-200 shadow-sm">
                             <span class="block text-xs font-semibold text-zinc-600 mb-2">Способ 2: Прямая ссылка или Эмодзи</span>
-                            <input type="text" id="admin-prod-image-url" class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-lg text-sm focus:ring-2 focus:ring-belarus-red focus:outline-none transition-shadow" placeholder="https://...jpg или 🏺">
+                            <input type="text" id="admin-prod-image-url" class="w-full px-3.5 py-2.5 border border-zinc-200 rounded-lg text-sm focus:ring-2 focus:ring-belarus-red focus:border-belarus-red focus:outline-none transition-shadow" placeholder="https://...jpg или 🏺">
                         </div>
                     </div>
                 </div>
@@ -825,20 +794,6 @@
     </div>
 </div>
 
-<!-- СКРЫТЫЙ БЛОК GOOGLE TRANSLATE -->
-<div id="google_translate_element" style="display:none;"></div>
-<script type="text/javascript">
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({
-            pageLanguage: 'ru',
-            includedLanguages: 'ru,be,en',
-            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-            autoDisplay: false
-        }, 'google_translate_element');
-    }
-</script>
-<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInAnonymously, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -871,36 +826,6 @@
     
     let IMGBB_API_KEY = null;
     let quill;
-
-    // =====================================
-    // ИСПРАВЛЕННАЯ ЛОГИКА СМЕНЫ ЯЗЫКА
-    // =====================================
-    window.changeLanguage = function(langValue, label) {
-        var selectField = document.querySelector(".goog-te-combo");
-        if (selectField) {
-            selectField.value = langValue;
-            
-            // Имитация реального клика для Google (обязательно с bubbles: true)
-            selectField.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
-            
-            document.getElementById('current-lang-label').innerText = label;
-            
-            // Сохраняем язык в cookies, чтобы он не сбрасывался при обновлении страницы
-            document.cookie = `googtrans=/ru/${langValue}; path=/;`;
-            document.cookie = `googtrans=/auto/${langValue}; path=/;`;
-        } else {
-            // Если скрипт Гугла еще не успел создать выпадающий список
-            setTimeout(function() { window.changeLanguage(langValue, label) }, 500);
-        }
-    };
-
-    function initLangLabel() {
-        let match = document.cookie.match(/googtrans=\/ru\/([^;]+)/) || document.cookie.match(/googtrans=\/auto\/([^;]+)/);
-        let currentLang = match ? match[1] : 'ru';
-        let labelMap = {'ru': 'RU', 'be': 'BY', 'en': 'EN'};
-        document.getElementById('current-lang-label').innerText = labelMap[currentLang] || 'RU';
-    }
-    // =====================================
 
     window.showToast = function(message, type = 'success') {
         const toast = document.getElementById('toast');
@@ -1319,13 +1244,7 @@
     window.closeCraftModal = function() { document.getElementById('craft-modal').classList.add('hidden'); };
     window.toggleMobileMenu = function() { document.getElementById('mobile-menu').classList.toggle('hidden'); };
 
-    function initApp() { 
-        initLangLabel(); // Инициализация языка
-        syncWithFirebaseCloud(); 
-        loadLocalStorageData(); 
-        setupInputMask(); 
-    }
-    
+    function initApp() { syncWithFirebaseCloud(); loadLocalStorageData(); setupInputMask(); }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initApp); else initApp();
 
 </script>
@@ -1333,4 +1252,3 @@
 <script type="text/javascript">new isvek.Bvi();</script>
 </body>
 </html>
-```
