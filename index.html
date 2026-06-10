@@ -18,6 +18,9 @@
     <!-- SortableJS (для Drag & Drop) -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
+    <!-- Настройки GTranslate -->
+    <script>window.gtranslateSettings = {"default_language":"ru","languages":["ru","be","en"],"wrapper_selector":".gtranslate_wrapper"}</script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -109,12 +112,10 @@
 
 <div class="h-2 bg-repeat-x w-full" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%228%22 viewBox=%220 0 16 8%22><path d=%22M0 4 L4 0 L8 4 L12 0 L16 4 L12 8 L8 4 L4 8 Z%22 fill=%22%23bd081c%22/></svg>');"></div>
 <header class="bg-white shadow-sm sticky top-0 z-50 transition-all duration-300">
-    <!-- ВЕРХНЯЯ ШАПКА (z-50 чтобы всегда была поверх полноэкранного меню) -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-50 bg-white">
         <div class="flex items-center justify-between min-h-[5rem] py-2 lg:py-0 lg:h-20">
             
-            <!-- ЛЕВАЯ ЧАСТЬ (Лого + Текст) -->
-            <div onclick="window.triggerSecretEntrance()" class="flex items-center gap-2 sm:gap-3 cursor-pointer select-none w-[65%] sm:w-auto">
+            <div onclick="window.triggerSecretEntrance()" class="flex items-center gap-2 sm:gap-3 cursor-pointer select-none w-[70%] sm:w-auto">
                 <div class="w-10 h-10 sm:w-12 sm:h-12 shrink-0 flex items-center justify-center hover:scale-105 transition-transform duration-300" title="Официальный логотип Стародорожского центра ремесел">
                     <svg class="w-full h-full text-belarus-red" viewBox="0 0 885 870" fill="none">
                         <use href="#center-logo"></use>
@@ -130,7 +131,6 @@
                 </div>
             </div>
 
-            <!-- ЦЕНТР (Меню на ПК) -->
             <nav class="hidden md:flex space-x-8 text-sm font-medium">
                 <a href="#about" class="text-zinc-600 hover:text-belarus-red transition-colors">О Центре</a>
                 <a href="#catalog" class="text-belarus-red font-bold">Каталог изделий</a>
@@ -138,48 +138,94 @@
                 <a href="#contacts" class="text-zinc-600 hover:text-belarus-red transition-colors">Контакты</a>
             </nav>
 
-            <!-- ПРАВАЯ ЧАСТЬ (Иконки) -->
             <div class="flex items-center gap-1 sm:gap-2 shrink-0">
-                <a href="#" class="bvi-open relative p-2 sm:p-2.5 text-zinc-600 hover:text-belarus-red transition-colors focus:outline-none" title="Версия сайта для слабовидящих">
+                
+                <div class="gtranslate_wrapper" style="position: absolute; width: 0; height: 0; overflow: hidden; opacity: 0; pointer-events: none;"></div>
+
+                <div class="relative hidden md:block" id="custom-lang-dropdown">
+                    <button onclick="window.toggleLangDropdown(event)" class="flex items-center gap-1.5 p-2 sm:p-2.5 text-zinc-600 hover:text-belarus-red transition-colors focus:outline-none rounded-lg">
+                        <i class="fa-solid fa-globe text-xl sm:text-2xl"></i>
+                        <span id="current-lang-text" class="text-xs font-bold uppercase">RU</span>
+                        <i class="fa-solid fa-chevron-down text-[9px] transition-transform duration-200" id="lang-dropdown-arrow"></i>
+                    </button>
+                    <div id="lang-dropdown-options" class="hidden absolute right-0 top-full mt-1 bg-white border border-zinc-200 rounded-xl shadow-xl z-50 overflow-hidden w-36">
+                        <button onclick="window.changeLanguage('ru')" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-belarus-redlight hover:text-belarus-red text-zinc-700 font-medium transition-colors border-b border-zinc-100">🇷🇺 Русский</button>
+                        <button onclick="window.changeLanguage('be')" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-belarus-redlight hover:text-belarus-red text-zinc-700 font-medium transition-colors border-b border-zinc-100">🇧🇾 Беларуская</button>
+                        <button onclick="window.changeLanguage('en')" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-belarus-redlight hover:text-belarus-red text-zinc-700 font-medium transition-colors">🇬🇧 English</button>
+                    </div>
+                </div>
+
+                <div class="w-px h-6 bg-zinc-200 mx-1 hidden md:block"></div>
+
+                <a href="#" class="bvi-open relative hidden md:block p-2 sm:p-2.5 text-zinc-600 hover:text-belarus-red transition-colors focus:outline-none" title="Версия сайта для слабовидящих">
                     <i class="fa-solid fa-eye text-xl sm:text-2xl"></i>
                 </a>
-                <button onclick="window.toggleFavoritesModal()" class="relative p-2 sm:p-2.5 text-zinc-600 hover:text-belarus-red transition-colors focus:outline-none" aria-label="Избранное (Закладки)">
+
+                <button onclick="window.toggleFavoritesModal()" class="relative hidden sm:block p-2 sm:p-2.5 text-zinc-600 hover:text-belarus-red transition-colors focus:outline-none" aria-label="Избранное (Закладки)">
                     <i class="fa-regular fa-heart text-xl sm:text-2xl"></i>
-                    <span id="fav-badge" class="hidden absolute top-0 right-0 sm:-top-1 sm:-right-1 bg-belarus-red text-white text-[9px] font-bold w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm leading-none">0</span>
+                    <span id="fav-badge-desktop" class="hidden absolute top-0 right-0 sm:-top-1 sm:-right-1 bg-belarus-red text-white text-[9px] font-bold w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm leading-none">0</span>
                 </button>
+
                 <button onclick="window.toggleCartModal()" class="relative p-2 sm:p-2.5 text-zinc-600 hover:text-belarus-red transition-colors focus:outline-none" aria-label="Корзина запросов">
                     <i class="fa-solid fa-basket-shopping text-xl sm:text-2xl"></i>
                     <span id="cart-badge" class="hidden absolute top-0 right-0 sm:-top-1 sm:-right-1 bg-amber-500 text-zinc-900 text-[9px] font-bold w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center border-2 shadow-sm leading-none border-white">0</span>
                 </button>
                 
-                <!-- КНОПКА МЕНЮ -->
                 <button onclick="window.toggleMobileMenu()" class="md:hidden p-2 text-zinc-600 hover:text-belarus-red transition-colors focus:outline-none relative w-10 h-10 flex items-center justify-center" aria-label="Меню">
-                    <i id="menu-icon-bars" class="fa-solid fa-bars text-xl sm:text-2xl absolute transition-all duration-300 transform scale-100 rotate-0"></i>
-                    <i id="menu-icon-close" class="fa-solid fa-xmark text-2xl sm:text-3xl absolute transition-all duration-300 transform scale-0 rotate-90 opacity-0 text-belarus-red"></i>
+                    <i id="menu-icon-bars" class="fa-solid fa-bars text-xl absolute transition-all duration-300 transform scale-100 rotate-0"></i>
+                    <i id="menu-icon-close" class="fa-solid fa-xmark text-2xl absolute transition-all duration-300 transform scale-0 rotate-90 opacity-0 text-belarus-red"></i>
                 </button>
             </div>
+
         </div>
     </div>
 
-    <!-- ПОЛНОЭКРАННОЕ МОБИЛЬНОЕ МЕНЮ (Чистый минимализм) -->
-    <!-- Меню на весь экран (fixed inset-0), появляется плавным затуханием -->
+    <!-- ПОЛНОЭКРАННОЕ МОБИЛЬНОЕ МЕНЮ -->
     <div id="mobile-menu-fullscreen" class="fixed inset-0 bg-white z-40 flex flex-col justify-center items-center opacity-0 pointer-events-none transition-opacity duration-300 md:hidden pb-10">
         
-        <!-- Крупные пункты меню -->
-        <nav class="flex flex-col items-center w-full space-y-8 px-6">
+        <nav class="flex flex-col items-center w-full space-y-8 px-6 mt-10">
             <a href="#about" onclick="window.toggleMobileMenu()" class="text-3xl font-serif text-zinc-800 hover:text-belarus-red transition-colors">О Центре</a>
             <a href="#catalog" onclick="window.toggleMobileMenu()" class="text-3xl font-serif font-bold text-belarus-red transition-colors">Каталог изделий</a>
             <a href="#masterclasses" onclick="window.toggleMobileMenu()" class="text-3xl font-serif text-zinc-800 hover:text-belarus-red transition-colors">Мастер-классы</a>
             <a href="#contacts" onclick="window.toggleMobileMenu()" class="text-3xl font-serif text-zinc-800 hover:text-belarus-red transition-colors">Контакты</a>
         </nav>
 
-        <!-- Контакты внизу -->
-        <div class="absolute bottom-12 text-center space-y-2">
-            <p class="text-xs text-zinc-400 font-bold tracking-widest uppercase">Связаться с нами</p>
-            <a href="tel:+375179254283" class="text-2xl font-serif font-bold text-zinc-800 block">80 (1792) 54-2-83</a>
+        <div class="flex items-center gap-6 mt-12 mb-6">
+            <div class="relative" id="mobile-lang-dropdown">
+                <button onclick="window.toggleMobileLangDropdown(event)" class="flex flex-col items-center gap-1 text-zinc-600 focus:outline-none p-2 rounded-xl hover:bg-zinc-50">
+                    <div class="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider" id="mobile-current-lang-text">RU <i class="fa-solid fa-chevron-down text-[8px] ml-0.5"></i></span>
+                </button>
+                <div id="mobile-lang-dropdown-options" class="hidden absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-white border border-zinc-200 rounded-xl shadow-xl z-50 overflow-hidden w-36">
+                    <button onclick="window.changeLanguage('ru')" class="w-full flex items-center gap-2 px-4 py-3 text-sm hover:bg-belarus-redlight text-zinc-700 font-medium border-b border-zinc-100">🇷🇺 Русский</button>
+                    <button onclick="window.changeLanguage('be')" class="w-full flex items-center gap-2 px-4 py-3 text-sm hover:bg-belarus-redlight text-zinc-700 font-medium border-b border-zinc-100">🇧🇾 Беларуская</button>
+                    <button onclick="window.changeLanguage('en')" class="w-full flex items-center gap-2 px-4 py-3 text-sm hover:bg-belarus-redlight text-zinc-700 font-medium">🇬🇧 English</button>
+                </div>
+            </div>
+
+            <a href="#" class="bvi-open flex flex-col items-center gap-1 text-zinc-600 p-2 rounded-xl hover:bg-zinc-50">
+                <div class="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-eye"></i>
+                </div>
+                <span class="text-[10px] font-bold uppercase tracking-wider">Версия</span>
+            </a>
+
+            <button onclick="window.toggleFavoritesModal(); window.toggleMobileMenu();" class="relative flex flex-col items-center gap-1 text-zinc-600 p-2 rounded-xl hover:bg-zinc-50">
+                <div class="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center text-xl relative">
+                    <i class="fa-regular fa-heart text-belarus-red"></i>
+                    <span id="fav-badge-mobile" class="hidden absolute -top-1 -right-1 bg-belarus-red text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm leading-none">0</span>
+                </div>
+                <span class="text-[10px] font-bold uppercase tracking-wider">Закладки</span>
+            </button>
+        </div>
+
+        <div class="absolute bottom-6 text-center space-y-1">
+            <a href="tel:+375179254283" class="text-xl font-serif font-bold text-zinc-800 block">80 (1792) 54-2-83</a>
+            <p class="text-[10px] text-zinc-400 font-bold tracking-widest uppercase">Позвонить мастерам</p>
         </div>
     </div>
-
 </header>
 
 <section class="relative bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white py-10 sm:py-16 lg:py-20 overflow-hidden">
@@ -550,6 +596,7 @@
     <i class="fa-solid fa-arrow-up"></i>
 </button>
 
+<!-- МОДАЛЬНЫЕ ОКНА И УВЕДОМЛЕНИЯ -->
 <div id="quickview-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-0 sm:p-4 overflow-y-auto">
     <div class="bg-white rounded-t-2xl sm:rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative border border-zinc-200">
         <button onclick="window.closeQuickView()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 flex items-center justify-center transition-colors z-10">
@@ -821,6 +868,8 @@
     </div>
 </div>
 
+<script src="https://cdn.gtranslate.net/widgets/latest/dropdown.js" defer></script>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInAnonymously, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -881,7 +930,6 @@
         clearTimeout(window.secretTimeout);
         if (window.secretCount >= 3) {
             window.secretCount = 0;
-            // Проверка: Авторизован ли уже мастер
             if (auth.currentUser && !auth.currentUser.isAnonymous) {
                 document.getElementById('admin-panel-modal').classList.remove('hidden');
                 initAdminPlugins();
@@ -942,9 +990,7 @@
                     if(snapshot.exists()) {
                         IMGBB_API_KEY = snapshot.val();
                     }
-                } catch(keyErr) {
-                    console.error("❌ Ошибка прав доступа при чтении ключа ImgBB:", keyErr);
-                }
+                } catch(keyErr) {}
             }
             
             onValue(ref(db, 'products'), (snapshot) => {
@@ -1057,7 +1103,72 @@
     window.resetFilters = function() { document.getElementById('search-input').value = ''; window.selectSortOption('default','По умолчанию'); searchQuery = ''; window.setCategory('all'); };
     window.toggleSortDropdown = function(e) { e.stopPropagation(); document.getElementById('sort-dropdown-options').classList.toggle('hidden'); document.getElementById('sort-dropdown-arrow').classList.toggle('rotate-180'); };
     window.selectSortOption = function(val, label) { currentSort = val; document.getElementById('sort-dropdown-label').innerText = label; document.getElementById('sort-dropdown-options').classList.add('hidden'); document.getElementById('sort-dropdown-arrow').classList.remove('rotate-180'); window.applyFilters(); };
-    document.addEventListener('click', (e) => { const drop = document.getElementById('custom-sort-dropdown'); if (drop && !drop.contains(e.target)) { document.getElementById('sort-dropdown-options')?.classList.add('hidden'); document.getElementById('sort-dropdown-arrow')?.classList.remove('rotate-180'); } });
+    
+    // ЛОГИКА КАСТОМНОГО ПЕРЕКЛЮЧАТЕЛЯ ЯЗЫКОВ
+    window.toggleLangDropdown = function(e) { 
+        e.stopPropagation(); 
+        document.getElementById('lang-dropdown-options')?.classList.toggle('hidden'); 
+        document.getElementById('lang-dropdown-arrow')?.classList.toggle('rotate-180'); 
+    };
+
+    window.toggleMobileLangDropdown = function(e) { 
+        e.stopPropagation(); 
+        document.getElementById('mobile-lang-dropdown-options')?.classList.toggle('hidden'); 
+    };
+    
+    window.changeLanguage = function(langCode) {
+        const gtLink = document.querySelector(`.gtranslate_wrapper a[data-gt-lang="${langCode}"]`);
+        
+        if (gtLink) {
+            gtLink.click();
+        } else {
+            document.cookie = `googtrans=/ru/${langCode}; path=/;`;
+            document.cookie = `googtrans=/ru/${langCode}; domain=.${location.hostname}; path=/;`;
+            location.reload();
+        }
+        
+        const textEl = document.getElementById('current-lang-text');
+        if(textEl) textEl.innerText = langCode.toUpperCase();
+
+        const mobileTextEl = document.getElementById('mobile-current-lang-text');
+        if(mobileTextEl) mobileTextEl.innerHTML = `${langCode.toUpperCase()} <i class="fa-solid fa-chevron-down text-[8px] ml-0.5"></i>`;
+        
+        document.getElementById('lang-dropdown-options')?.classList.add('hidden');
+        document.getElementById('mobile-lang-dropdown-options')?.classList.add('hidden');
+        document.getElementById('lang-dropdown-arrow')?.classList.remove('rotate-180');
+    };
+
+    function updateLangBtnFromCookie() {
+        const match = document.cookie.match(/googtrans=\/[a-z]{2}\/([a-z]{2})/i) || document.cookie.match(/googtrans=\/ru\/([a-z]{2})/i);
+        if (match && match[1]) {
+            const lang = match[1].toUpperCase();
+            
+            const textEl = document.getElementById('current-lang-text');
+            if(textEl) textEl.innerText = lang;
+
+            const mobileTextEl = document.getElementById('mobile-current-lang-text');
+            if(mobileTextEl) mobileTextEl.innerHTML = `${lang} <i class="fa-solid fa-chevron-down text-[8px] ml-0.5"></i>`;
+        }
+    }
+
+    document.addEventListener('click', (e) => { 
+        const dropSort = document.getElementById('custom-sort-dropdown'); 
+        if (dropSort && !dropSort.contains(e.target)) { 
+            document.getElementById('sort-dropdown-options')?.classList.add('hidden'); 
+            document.getElementById('sort-dropdown-arrow')?.classList.remove('rotate-180'); 
+        } 
+        
+        const langDrop = document.getElementById('custom-lang-dropdown'); 
+        if (langDrop && !langDrop.contains(e.target)) { 
+            document.getElementById('lang-dropdown-options')?.classList.add('hidden'); 
+            document.getElementById('lang-dropdown-arrow')?.classList.remove('rotate-180'); 
+        } 
+
+        const mobileLangDrop = document.getElementById('mobile-lang-dropdown'); 
+        if (mobileLangDrop && !mobileLangDrop.contains(e.target)) { 
+            document.getElementById('mobile-lang-dropdown-options')?.classList.add('hidden'); 
+        } 
+    });
     
     window.toggleFavorite = function(id, btnElement) { 
         const idx = favorites.indexOf(id); 
@@ -1074,7 +1185,17 @@
         localStorage.setItem('starodorozhski_fav_v5', JSON.stringify(favorites)); 
         window.updateFavBadge(); window.renderFavoritesList(); 
     };
-    window.updateFavBadge = function() { const badge = document.getElementById('fav-badge'); if (badge) { if (favorites.length > 0) { badge.innerText = favorites.length; badge.classList.remove('hidden'); } else badge.classList.add('hidden'); } };
+
+    window.updateFavBadge = function() { 
+        ['fav-badge-desktop', 'fav-badge-mobile'].forEach(badgeId => {
+            const badge = document.getElementById(badgeId);
+            if (badge) { 
+                if (favorites.length > 0) { badge.innerText = favorites.length; badge.classList.remove('hidden'); } 
+                else { badge.classList.add('hidden'); } 
+            }
+        });
+    };
+
     window.toggleFavoritesModal = function() { document.getElementById('favorites-modal').classList.toggle('hidden'); window.renderFavoritesList(); };
     window.renderFavoritesList = function() { const list = document.getElementById('favorites-list'); if (!list) return; list.innerHTML = ''; if (favorites.length === 0) { list.innerHTML = `<div class="text-center py-10 text-zinc-400">Список пуст.</div>`; return; } favorites.forEach(id => { const prod = PRODUCTS.find(p => p.id === id); if (!prod) return; const isImg = prod.image && (prod.image.startsWith('http') || prod.image.startsWith('data:')); list.innerHTML += `<div class="flex items-center justify-between bg-zinc-50 p-3 rounded-xl border gap-3"><div class="flex items-center gap-3"><div class="w-10 h-10 flex items-center justify-center bg-white rounded border">${isImg?`<img src="${prod.image}" class="w-full h-full object-cover">`:`<span>${prod.image}</span>`}</div><div><h4 class="text-xs font-bold truncate">${prod.name}</h4><span class="text-xs text-belarus-red">${Number(prod.price).toFixed(2)} BYN</span></div></div><div class="flex gap-1"><button onclick="window.requestInquiry(${prod.id}); window.toggleFavoritesModal();" class="p-2 text-zinc-600" title="Спросить"><i class="fa-solid fa-comment-dots"></i></button><button onclick="window.toggleFavorite(${prod.id})" class="p-2 text-zinc-400" title="Удалить"><i class="fa-solid fa-trash-can"></i></button></div></div>`; }); };
 
@@ -1322,10 +1443,11 @@
         }
     };
 
-    function initApp() { syncWithFirebaseCloud(); loadLocalStorageData(); setupInputMask(); }
+    function initApp() { syncWithFirebaseCloud(); loadLocalStorageData(); setupInputMask(); updateLangBtnFromCookie(); }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initApp); else initApp();
 </script>
 <script src="js/bvi.min.js"></script>
 <script type="text/javascript">new isvek.Bvi();</script>
+
 </body>
 </html>
